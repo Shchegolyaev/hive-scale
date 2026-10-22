@@ -70,8 +70,8 @@
     <text x="822" y="246" fill="#2E8B57">A+</text><text x="850" y="246" fill="#7FA36B">A−</text>
   </g>
   <rect x="900" y="172" width="240" height="74" rx="10" class="box"/>
-  <text x="1020" y="203" class="t" text-anchor="middle">4 × тензодатчик 50 кг</text>
-  <text x="1020" y="224" class="s" text-anchor="middle">полумосты → мост, схема ниже</text>
+  <text x="1020" y="203" class="t" text-anchor="middle">Тензодатчик L6G 200 кг</text>
+  <text x="1020" y="224" class="s" text-anchor="middle">4 провода + экран на GND</text>
 
   <!-- I2C -->
   <line x1="310" y1="300" x2="900" y2="300" class="w" stroke="#7B5EA7"/>

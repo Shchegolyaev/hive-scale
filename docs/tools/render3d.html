@@ -1,0 +1,135 @@
+<!doctype html>
+<!-- 3D-вид платформы. model.js создаёт build_drawings.py; рядом положи three.min.js r149
+     (https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js) и открой файл в браузере.
+     ?view=full — с ульем; ?view=frame — без улья, настил полупрозрачный, с номерами позиций. -->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; background: #FFFBF2; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
+  #wrap { position: relative; width: 1400px; height: 1000px; overflow: hidden; }
+  canvas { display: block; }
+  svg#ov { position: absolute; inset: 0; pointer-events: none; }
+  .title { position: absolute; left: 40px; top: 30px; font-size: 30px; font-weight: 700; color: #2B2118; }
+  .sub { position: absolute; left: 40px; top: 74px; font-size: 18px; color: #6B5D4B; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div class="title" id="title"></div>
+  <div class="sub" id="sub"></div>
+  <svg id="ov" width="1400" height="1000"></svg>
+</div>
+<script src="three.min.js"></script>
+<script src="model.js"></script>
+<script>
+const view = new URLSearchParams(location.search).get('view') || 'full';
+const W = 1400, H = 1000;
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H);
+renderer.setPixelRatio(1);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputEncoding = THREE.sRGBEncoding;
+document.getElementById('wrap').prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#FFFBF2');
+
+// модель: x вправо, y назад, z вверх  ->  three: x, z(вверх), -y(к зрителю... т.е. перед = +Z three)
+const toThree = (x, y, z) => new THREE.Vector3(x, z, -y);
+
+const hidden = view === 'frame' ? new Set(['hive', 'strap']) : new Set();
+const labels = {};
+for (const b of MODEL.boxes) {
+  if (hidden.has(b.group)) continue;
+  if (view === 'frame' && b.group === 'ground') continue;
+  if (b.group === 'ground') {
+    // грунт рисуем тонкой плоскостью на уровне 0, ножки в земле показываем в режиме frame полупрозрачным грунтом
+  }
+  const sx = b.x1 - b.x0, sy = b.y1 - b.y0, sz = b.z1 - b.z0;
+  const geo = new THREE.BoxGeometry(sx, sz, sy);
+  const isGround = b.group === 'ground';
+  const mat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(b.color).convertSRGBToLinear(),
+    roughness: b.color === '#C9CED4' ? 0.35 : 0.8,
+    metalness: (b.color === '#C9CED4' || b.color === '#8D99A6') ? 0.35 : 0.0,
+    transparent: (view === 'frame' && b.group === 'deck') || isGround,
+    opacity: (view === 'frame' && b.group === 'deck') ? 0.28 : (isGround ? (view === 'frame' ? 0.55 : 1) : 1),
+    depthWrite: !(view === 'frame' && (b.group === 'deck' || isGround)),
+  });
+  const m = new THREE.Mesh(geo, mat);
+  const c = toThree((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, (b.z0 + b.z1) / 2);
+  m.position.copy(c);
+  m.castShadow = !isGround;
+  m.receiveShadow = true;
+  scene.add(m);
+  if (!isGround) {
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo),
+      new THREE.LineBasicMaterial({ color: 0x2B2118, transparent: true, opacity: b.group === 'deck' && view === 'frame' ? 0.5 : 0.18 }));
+    edges.position.copy(c);
+    scene.add(edges);
+  }
+  if (b.num && !labels[b.num]) labels[b.num] = { b, c };
+}
+
+// трава вокруг
+const grass = new THREE.Mesh(new THREE.CircleGeometry(1500, 64),
+  new THREE.MeshStandardMaterial({ color: new THREE.Color('#CFE0B4').convertSRGBToLinear(), roughness: 1 }));
+grass.rotation.x = -Math.PI / 2; grass.position.y = -1; grass.receiveShadow = true;
+scene.add(grass);
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0xc8bca8, 0.75));
+const sun = new THREE.DirectionalLight(0xffffff, 0.85);
+sun.position.set(-900, 1800, 1200);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -1200, right: 1200, top: 1600, bottom: -800, near: 10, far: 5000 });
+sun.shadow.bias = -0.0005;
+scene.add(sun);
+
+const camera = new THREE.PerspectiveCamera(view === 'frame' ? 26 : 24, W / H, 10, 10000);
+if (view === 'frame') {
+  camera.position.set(1500, 1350, 2050);
+  camera.lookAt(0, 230, 0);
+} else {
+  camera.position.set(2350, 1650, 3400);
+  camera.lookAt(-60, 700, 0);
+}
+renderer.render(scene, camera);
+
+const title = document.getElementById('title'), sub = document.getElementById('sub');
+if (view === 'frame') {
+  title.textContent = 'Устройство платформы';
+  sub.textContent = 'настил показан прозрачным · номера позиций — как в таблице BUILD.md';
+  // выноски с номерами
+  const ov = document.getElementById('ov');
+  const spots = {
+    1: [-250, -480, 100], 2: [300, -300, 200], 3: [0, -500, 200], 4: [-330, -20, 280], 5: [-110, -35, 315],
+    6: [0, -35, 355], 7: [200, -20, 430], 8: [0, -330, 470], 9: [-300, -300, 501], 10: [250, -250, 330],
+    11: [320, -363, 400], 12: [370, -40, 200],
+  };
+  const offs = {
+    1: [-150, 40], 2: [80, 60], 3: [-40, 90], 4: [-170, -10], 5: [-150, 70], 6: [-60, 120],
+    7: [150, -70], 8: [-60, -110], 9: [-120, -90], 10: [120, 60], 11: [130, -40], 12: [140, 20],
+  };
+  let s = '';
+  for (const [n, p] of Object.entries(spots)) {
+    const v = toThree(...p).project(camera);
+    const x = (v.x + 1) / 2 * W, y = (1 - v.y) / 2 * H;
+    const [dx, dy] = offs[n];
+    const lx = x + dx, ly = y + dy;
+    s += `<line x1="${x}" y1="${y}" x2="${lx}" y2="${ly}" stroke="#2B2118" stroke-width="1.6"/>`;
+    s += `<circle cx="${x}" cy="${y}" r="4" fill="#2B2118"/>`;
+    s += `<circle cx="${lx}" cy="${ly}" r="19" fill="#E8A317" stroke="#2B2118" stroke-width="1.5"/>`;
+    s += `<text x="${lx}" y="${ly + 7}" font-size="19" font-weight="700" text-anchor="middle" fill="#2B2118">${n}</text>`;
+  }
+  ov.innerHTML = s;
+} else {
+  title.textContent = 'Улей на весах';
+  sub.textContent = 'деревянный каркас на ножках · один датчик L6G · улей стянут ремнями с настилом';
+}
+document.title = 'done';
+</script>
+</body>
+</html>
