@@ -99,7 +99,7 @@ def front():
     # выноски
     callout(o, X(-250), Z(-250), 1, -150, 0)
     callout(o, X(-250), Z(200), 2, -150, 0)
-    callout(o, X(-300), Z(M.z_lt - 30), 4, -100, -20)
+    callout(o, X(-150), Z(M.z_lt - 40), 4, -130, -60)
     callout(o, X(-110), Z(M.z_cell0 - 5), 5, -120, 40)
     callout(o, X(0), Z((M.z_cell0 + M.z_cell1) / 2), 6, -50, 100)
     callout(o, X(110), Z(M.z_ut0 - 5), 5, 60, 80)
@@ -107,17 +107,17 @@ def front():
     callout(o, X(-250), Z(M.z_rib1 - 10), 8, -200, -60)
     callout(o, X(-200), Z(M.z_deck - 10), 9, -150, -100)
     callout(o, X(335), Z(M.z_frame0 + 20), 12, -10, 150)
-    callout(o, X(320), Z(M.z_sleeper + 120), 11, 110, 30)
+    callout(o, X(325), Z(M.z_sleeper + 120), 11, 110, 30)
     # зазоры
-    o.append(f'<text x="{X(-370):.1f}" y="{Z(M.z_cell1) - 28:.1f}" fill="{MUTED}" font-size="12.5" text-anchor="end">зазор ≥ 5 мм между</text>')
-    o.append(f'<text x="{X(-370):.1f}" y="{Z(M.z_cell1) - 13:.1f}" fill="{MUTED}" font-size="12.5" text-anchor="end">датчиком и траверсами</text>')
+    o.append(f'<text x="{X(-430):.1f}" y="{Z(M.z_cell1) - 28:.1f}" fill="{MUTED}" font-size="12.5" text-anchor="end">зазор ≥ 5 мм между</text>')
+    o.append(f'<text x="{X(-430):.1f}" y="{Z(M.z_cell1) - 13:.1f}" fill="{MUTED}" font-size="12.5" text-anchor="end">датчиком и траверсами</text>')
     o.append("</svg>")
     (IMG / "build-front.svg").write_text("\n".join(o), encoding="utf-8")
 
 
 # ---------------------------------------------------------------- вид сверху
 def top():
-    W, H = 1200, 1010
+    W, H = 1200, 960
     S = 0.62
     OX, OY = 560, 520
     X = lambda x: OX + x * S
@@ -128,7 +128,7 @@ def top():
     for b in bx:
         if b["name"].startswith("Ножка"):
             continue
-        op = 0.9 if b["group"] == "top" else 1
+        op = 0.55 if b["group"] == "top" else 1
         o.append(f'<rect x="{X(b["x0"]):.1f}" y="{Y(b["y1"]):.1f}" width="{(b["x1"] - b["x0"]) * S:.1f}" height="{(b["y1"] - b["y0"]) * S:.1f}" '
                  f'fill="{b["color"]}" fill-opacity="{op}" stroke="{INK}" stroke-width="0.8" stroke-opacity="0.6"/>')
     # ножки — пунктиром (под лежнями)
@@ -152,17 +152,16 @@ def top():
     dim_h(o, X(-250), X(0), Y(500) - 40, "250", ext_from=Y(350))
     dim_h(o, X(0), X(250), Y(500) - 40, "250", ext_from=Y(350))
     dim_h(o, X(-300), X(300), Y(-500) + 60, "600 по наружным граням лежней", ext_from=Y(-500))
-    dim_h(o, X(-350), X(350), Y(-500) + 100, "700 нижняя траверса", ext_from=Y(-20))
     # выноски
     callout(o, X(-250), Y(-430), 1, -110, 40)
     callout(o, X(250), Y(150), 2, -90, -40)
     callout(o, X(-100), Y(470), 3, -60, -50)
-    callout(o, X(-330), Y(0), 4, -70, -40)
+    callout(o, X(-180), Y(-30), 4, -110, 70)
     callout(o, X(0), Y(28), 6, 30, -70)
     callout(o, X(140), Y(0), 7, 60, 60)
     callout(o, X(0), Y(-330), 8, 50, 20)
     callout(o, X(250), Y(-250), 10, -90, 20)
-    callout(o, X(320), Y(-363), 11, 70, 50)
+    callout(o, X(325), Y(-385), 11, 70, 50)
     callout(o, X(370), Y(60), 12, 60, -110)
     o.append("</svg>")
     (IMG / "build-top.svg").write_text("\n".join(o), encoding="utf-8")
