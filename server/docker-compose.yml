@@ -1,0 +1,68 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    ports:
+      - "8883:8883"            # MQTT поверх TLS — наружу
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/passwd:/mosquitto/config/passwd:ro
+      - ./mosquitto/acl:/mosquitto/config/acl:ro
+      - ./mosquitto/certs:/mosquitto/certs:ro
+      - mosquitto-data:/mosquitto/data
+
+  influxdb:
+    image: influxdb:2.7
+    restart: unless-stopped
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUX_PASSWORD}
+      DOCKER_INFLUXDB_INIT_ORG: apiary
+      DOCKER_INFLUXDB_INIT_BUCKET: hives
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_TOKEN}
+    volumes:
+      - influx-data:/var/lib/influxdb2
+
+  telegraf:
+    image: telegraf:1.32
+    restart: unless-stopped
+    environment:
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
+      MQTT_PASS: ${MQTT_TELEGRAF_PASS}
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on: [mosquitto, influxdb]
+
+  grafana:
+    image: grafana/grafana-oss:11.3.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"  # наружу — через nginx/caddy с TLS, либо через VPN
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana-data:/var/lib/grafana
+    depends_on: [influxdb]
+
+  notifier:
+    build: ./notifier
+    restart: unless-stopped
+    environment:
+      MQTT_URL: tcp://mosquitto:1883
+      MQTT_USER: notifier
+      MQTT_PASS: ${MQTT_NOTIFIER_PASS}
+      TG_TOKEN: ${TG_TOKEN}
+      TG_CHAT_ID: ${TG_CHAT_ID}
+      NTFY_URL: ${NTFY_URL}
+      OFFLINE_AFTER: 3h
+      LOWBAT_V: "3.5"
+      TZ: Europe/Moscow
+    depends_on: [mosquitto]
+
+volumes:
+  mosquitto-data:
+  influx-data:
+  grafana-data:

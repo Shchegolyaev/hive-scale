@@ -1,0 +1,8 @@
+# Каждый улей пишет только в свои топики (логин = id улья)
+pattern write apiary/%u/#
+
+user telegraf
+topic read apiary/+/state
+
+user notifier
+topic read apiary/#

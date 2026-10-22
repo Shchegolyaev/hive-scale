@@ -1,0 +1,12 @@
+# PlatformIO
+firmware/.pio/
+firmware/.vscode/
+
+# Секреты
+server/.env
+firmware/include/secrets.h
+server/mosquitto/passwd
+server/mosquitto/certs/*
+!server/mosquitto/certs/.gitkeep
+
+.DS_Store

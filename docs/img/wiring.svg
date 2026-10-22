@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <style>
+      .t  { fill:#2B2118; font-size:17px; font-weight:700 }
+      .s  { fill:#6B5D4B; font-size:13.5px }
+      .pin{ fill:#FFF6E5; font-size:14px; font-weight:600 }
+      .pn { fill:#B9C7D8; font-size:12px }
+      .w  { fill:none; stroke-width:3; stroke-linecap:round; stroke-linejoin:round }
+      .box{ fill:#FFF; stroke:#D9CBB0; stroke-width:1.5 }
+      .res{ fill:#FFF; stroke:#2B2118; stroke-width:1.8 }
+    </style>
+  </defs>
+
+  <rect width="1200" height="640" rx="20" fill="#FFFBF2"/>
+
+  <!-- ESP32 -->
+  <rect x="60" y="70" width="250" height="510" rx="14" fill="#1F3A5F"/>
+  <rect x="96" y="96" width="150" height="120" rx="6" fill="#B9C2CC" stroke="#8C98A5"/>
+  <text x="171" y="150" fill="#2B3A4A" font-size="17" font-weight="700" text-anchor="middle">ESP32</text>
+  <text x="171" y="172" fill="#3C4C5D" font-size="13" text-anchor="middle">WROOM-32</text>
+  <path d="M106 86 h14 v-8 h14 v8 h14 v-8 h14 v8 h14 v-8 h14 v8 h14 v-8 h14 v8" fill="none" stroke="#D9B44A" stroke-width="2"/>
+  <text x="90" y="560" fill="#7F93AB" font-size="12">FireBeetle 2 / LOLIN D32 / DevKit</text>
+
+  <!-- пины -->
+  <g>
+    <text x="292" y="115" class="pin" text-anchor="end">3V3</text>
+    <text x="292" y="145" class="pin" text-anchor="end">GND</text>
+    <text x="292" y="195" class="pin" text-anchor="end">GPIO25</text>
+    <text x="292" y="230" class="pin" text-anchor="end">GPIO26</text>
+    <text x="292" y="305" class="pin" text-anchor="end">GPIO21</text>
+    <text x="292" y="340" class="pin" text-anchor="end">GPIO22</text>
+    <text x="292" y="415" class="pin" text-anchor="end">GPIO4</text>
+    <text x="292" y="485" class="pin" text-anchor="end">GPIO35</text>
+    <text x="292" y="530" class="pin" text-anchor="end">GPIO13</text>
+    <g fill="#D9B44A">
+      <circle cx="310" cy="110" r="5"/><circle cx="310" cy="140" r="5"/><circle cx="310" cy="190" r="5"/>
+      <circle cx="310" cy="225" r="5"/><circle cx="310" cy="300" r="5"/><circle cx="310" cy="335" r="5"/>
+      <circle cx="310" cy="410" r="5"/><circle cx="310" cy="480" r="5"/><circle cx="310" cy="525" r="5"/>
+    </g>
+  </g>
+
+  <!-- Питание -->
+  <line x1="310" y1="110" x2="1140" y2="110" class="w" stroke="#D6452B"/>
+  <line x1="310" y1="140" x2="1140" y2="140" class="w" stroke="#2B2118"/>
+  <text x="1140" y="102" fill="#D6452B" font-size="13" font-weight="700" text-anchor="end">3V3 → VCC всех модулей</text>
+  <text x="1140" y="160" fill="#2B2118" font-size="13" font-weight="700" text-anchor="end">GND — общий</text>
+
+  <!-- HX711 -->
+  <line x1="310" y1="190" x2="640" y2="190" class="w" stroke="#2E8B57"/>
+  <line x1="310" y1="225" x2="640" y2="225" class="w" stroke="#2F6DB5"/>
+  <text x="380" y="183" fill="#2E8B57" font-size="13" font-weight="700">DT</text>
+  <text x="380" y="245" fill="#2F6DB5" font-size="13" font-weight="700">SCK</text>
+  <!-- подтяжка SCK -->
+  <line x1="520" y1="225" x2="520" y2="238" stroke="#2F6DB5" stroke-width="2"/>
+  <rect x="514" y="238" width="12" height="26" class="res"/>
+  <text x="534" y="257" class="s" font-weight="700">10k → 3V3</text>
+  <circle cx="520" cy="225" r="4" fill="#2F6DB5"/>
+
+  <rect x="640" y="172" width="170" height="74" rx="10" class="box" stroke="#2E8B57"/>
+  <text x="725" y="203" class="t" text-anchor="middle">HX711</text>
+  <text x="725" y="224" class="s" text-anchor="middle">RATE → GND (10 Гц)</text>
+
+  <!-- мост -->
+  <g font-size="12" font-weight="700">
+    <line x1="810" y1="186" x2="900" y2="186" class="w" stroke="#D6452B" stroke-width="2.5"/>
+    <line x1="810" y1="198" x2="900" y2="198" class="w" stroke="#2B2118" stroke-width="2.5"/>
+    <line x1="810" y1="218" x2="900" y2="218" class="w" stroke="#2E8B57" stroke-width="2.5"/>
+    <line x1="810" y1="230" x2="900" y2="230" class="w" stroke="#7FA36B" stroke-width="2.5"/>
+    <text x="822" y="182" fill="#D6452B">E+</text><text x="850" y="182" fill="#2B2118">E−</text>
+    <text x="822" y="246" fill="#2E8B57">A+</text><text x="850" y="246" fill="#7FA36B">A−</text>
+  </g>
+  <rect x="900" y="172" width="240" height="74" rx="10" class="box"/>
+  <text x="1020" y="203" class="t" text-anchor="middle">4 × тензодатчик 50 кг</text>
+  <text x="1020" y="224" class="s" text-anchor="middle">полумосты → мост, схема ниже</text>
+
+  <!-- I2C -->
+  <line x1="310" y1="300" x2="900" y2="300" class="w" stroke="#7B5EA7"/>
+  <line x1="310" y1="335" x2="900" y2="335" class="w" stroke="#E8701A"/>
+  <text x="380" y="293" fill="#7B5EA7" font-size="13" font-weight="700">SDA</text>
+  <text x="380" y="355" fill="#E8701A" font-size="13" font-weight="700">SCL</text>
+  <text x="480" y="322" class="s" text-anchor="middle">подтяжки — на модулях</text>
+
+  <rect x="640" y="276" width="170" height="82" rx="10" class="box" stroke="#7B5EA7"/>
+  <text x="725" y="306" class="t" text-anchor="middle">SHT31 · улей</text>
+  <text x="725" y="326" class="s" text-anchor="middle">0x44 · ADDR → GND</text>
+  <text x="725" y="345" class="s" text-anchor="middle">в капсуле с фильтром</text>
+
+  <rect x="900" y="276" width="240" height="82" rx="10" class="box" stroke="#7B5EA7"/>
+  <text x="1020" y="306" class="t" text-anchor="middle">SHT31 · снаружи</text>
+  <text x="1020" y="326" class="s" text-anchor="middle">0x45 · ADDR → VCC</text>
+  <text x="1020" y="345" class="s" text-anchor="middle">в радиационном экране</text>
+
+  <!-- 1-Wire -->
+  <line x1="310" y1="410" x2="900" y2="410" class="w" stroke="#138A8A"/>
+  <text x="380" y="403" fill="#138A8A" font-size="13" font-weight="700">1-Wire</text>
+  <line x1="560" y1="410" x2="560" y2="392" stroke="#138A8A" stroke-width="2"/>
+  <rect x="554" y="362" width="12" height="30" class="res"/>
+  <text x="572" y="382" class="s" font-weight="700">4,7k → 3V3</text>
+  <circle cx="560" cy="410" r="4" fill="#138A8A"/>
+
+  <rect x="640" y="384" width="170" height="54" rx="10" class="box" stroke="#138A8A"/>
+  <text x="725" y="408" class="t" text-anchor="middle">DS18B20 · t1</text>
+  <text x="725" y="427" class="s" text-anchor="middle">центр гнезда</text>
+  <rect x="900" y="384" width="240" height="54" rx="10" class="box" stroke="#138A8A" stroke-dasharray="6 4"/>
+  <text x="1020" y="408" class="t" text-anchor="middle">t2 · t3 (по желанию)</text>
+  <text x="1020" y="427" class="s" text-anchor="middle">край гнезда · платформа</text>
+
+  <!-- Батарея -->
+  <line x1="310" y1="480" x2="640" y2="480" class="w" stroke="#C8442E"/>
+  <text x="380" y="473" fill="#C8442E" font-size="13" font-weight="700">VBAT / 2</text>
+  <rect x="640" y="456" width="500" height="48" rx="10" class="box" stroke="#C8442E"/>
+  <text x="660" y="485" class="s"><tspan class="t" font-size="15">Делитель</tspan>   BAT+ — 470k — <tspan font-weight="700">GPIO35</tspan> — 470k — GND,  + 100 нФ на GND</text>
+
+  <!-- Калибровка -->
+  <line x1="310" y1="525" x2="640" y2="525" class="w" stroke="#8A7A62" stroke-dasharray="2 6"/>
+  <text x="380" y="545" fill="#8A7A62" font-size="13" font-weight="700">CAL</text>
+  <rect x="640" y="514" width="500" height="44" rx="10" class="box" stroke="#8A7A62" stroke-dasharray="6 4"/>
+  <text x="660" y="541" class="s"><tspan class="t" font-size="15">Перемычка → GND</tspan>   при включении = режим калибровки</text>
+
+  <!-- Конденсатор -->
+  <text x="60" y="612" class="s">На 3V3 рядом с ESP32: <tspan font-weight="700">1000 мкФ low-ESR</tspan> — сглаживает пики Wi-Fi на холодном аккумуляторе.</text>
+</svg>

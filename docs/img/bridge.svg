@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" width="900" height="560" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <style>
+      .t  { fill:#2B2118; font-size:17px; font-weight:700 }
+      .s  { fill:#6B5D4B; font-size:13.5px }
+      .cell { fill:#C9CED4; stroke:#8C98A5; stroke-width:1.5 }
+      .btn  { fill:#7D8792 }
+      .red  { stroke:#D6452B; stroke-width:4; fill:none; stroke-linecap:round }
+      .wht  { stroke:#B8AE9C; stroke-width:4; fill:none; stroke-linecap:round }
+      .wht2 { stroke:#FFFFFF; stroke-width:2; fill:none; stroke-linecap:round }
+      .blk  { stroke:#2B2118; stroke-width:4; fill:none; stroke-linecap:round }
+      .lbl  { font-size:15px; font-weight:800 }
+    </style>
+  </defs>
+
+  <rect width="900" height="560" rx="20" fill="#FFFBF2"/>
+  <rect x="120" y="70" width="660" height="380" rx="12" fill="none" stroke="#E4D5B5" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="450" y="58" class="s" text-anchor="middle">вид сверху на платформу</text>
+
+  <!-- белые: горизонтально -->
+  <path d="M260 130 L640 130" class="wht"/><path d="M260 130 L640 130" class="wht2"/>
+  <path d="M260 390 L640 390" class="wht"/><path d="M260 390 L640 390" class="wht2"/>
+  <text x="450" y="120" class="s" text-anchor="middle">белый — белый</text>
+  <text x="450" y="414" class="s" text-anchor="middle">белый — белый</text>
+  <!-- чёрные: вертикально -->
+  <path d="M200 170 L200 350" class="blk"/>
+  <path d="M700 170 L700 350" class="blk"/>
+  <text x="186" y="264" class="s" text-anchor="end">чёрный</text>
+  <text x="186" y="282" class="s" text-anchor="end">— чёрный</text>
+  <text x="714" y="264" class="s">чёрный</text>
+  <text x="714" y="282" class="s">— чёрный</text>
+
+  <!-- красные к HX711 -->
+  <path d="M245 160 L360 232" class="red"/>
+  <path d="M655 160 L540 232" class="red"/>
+  <path d="M245 360 L360 288" class="red"/>
+  <path d="M655 360 L540 288" class="red"/>
+
+  <!-- HX711 -->
+  <rect x="360" y="212" width="180" height="96" rx="12" fill="#FFF" stroke="#2E8B57" stroke-width="2"/>
+  <text x="450" y="266" class="t" text-anchor="middle">HX711</text>
+  <text x="372" y="238" class="lbl" fill="#D6452B">E+</text>
+  <text x="528" y="238" class="lbl" fill="#2E8B57" text-anchor="end">A+</text>
+  <text x="372" y="298" class="lbl" fill="#2E8B57">A−</text>
+  <text x="528" y="298" class="lbl" fill="#D6452B" text-anchor="end">E−</text>
+
+  <!-- датчики -->
+  <g>
+    <rect x="140" y="90" width="120" height="80" rx="10" class="cell"/><circle cx="200" cy="130" r="14" class="btn"/>
+    <text x="150" y="110" class="t" font-size="14">ЛВ</text>
+    <rect x="640" y="90" width="120" height="80" rx="10" class="cell"/><circle cx="700" cy="130" r="14" class="btn"/>
+    <text x="750" y="110" class="t" font-size="14" text-anchor="end">ПВ</text>
+    <rect x="140" y="350" width="120" height="80" rx="10" class="cell"/><circle cx="200" cy="390" r="14" class="btn"/>
+    <text x="150" y="422" class="t" font-size="14">ЛН</text>
+    <rect x="640" y="350" width="120" height="80" rx="10" class="cell"/><circle cx="700" cy="390" r="14" class="btn"/>
+    <text x="750" y="422" class="t" font-size="14" text-anchor="end">ПН</text>
+  </g>
+  <text x="300" y="186" class="s" fill="#D6452B" font-weight="700">красный</text>
+
+  <!-- подсказка -->
+  <rect x="40" y="474" width="820" height="66" rx="12" fill="#F6EEDC"/>
+  <text x="60" y="501" class="s"><tspan font-weight="700" fill="#2B2118">Цвета у продавцов разные — проверь мультиметром.</tspan> Средний вывод (здесь красный):</text>
+  <text x="60" y="523" class="s">~1 кОм до каждого из двух других; между крайними ~2 кОм. Диагональ ЛВ–ПН — питание, ПВ–ЛН — сигнал.</text>
+</svg>
