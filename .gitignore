@@ -10,3 +10,5 @@ server/mosquitto/certs/*
 !server/mosquitto/certs/.gitkeep
 
 .DS_Store
+
+__pycache__/
