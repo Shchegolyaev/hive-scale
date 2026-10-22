@@ -59,7 +59,7 @@ def front():
     o.append(f'<text x="{X(-610):.1f}" y="{Z(0) + 20:.1f}" fill="{MUTED}" font-size="13">земля</text>')
     # гравийная подушка под ножками
     for sx in (-1, 1):
-        c = sx * 250
+        c = sx * M.LEG_X
         o.append(f'<rect x="{X(c - 90):.1f}" y="{Z(-M.LEG_DOWN):.1f}" width="{180 * S:.1f}" height="{100 * S:.1f}" fill="#BDB6A6" stroke="{MUTED}" stroke-dasharray="3 3"/>')
     bx = [b for b in M.boxes if b["group"] not in ("ground",)]
     bx.sort(key=lambda b: -(b["y0"] + b["y1"]))   # дальние сначала
@@ -87,27 +87,26 @@ def front():
     o.append(f'<line x1="{X(-300):.1f}" y1="{top:.1f}" x2="{X(-300):.1f}" y2="{Z(M.HEIGHT_TOP) - 34:.1f}" stroke="{MUTED}" stroke-width="0.8" stroke-dasharray="2 3"/>')
     o.append(f'<line x1="{X(300):.1f}" y1="{top:.1f}" x2="{X(300):.1f}" y2="{Z(M.HEIGHT_TOP) - 34:.1f}" stroke="{MUTED}" stroke-width="0.8" stroke-dasharray="2 3"/>')
     yb = Z(-M.LEG_DOWN) + 76
-    dim_h(o, X(-300), X(300), yb, "600", ext_from=Z(-M.LEG_DOWN))
-    dim_h(o, X(-250), X(250), yb + 34, "500 между осями ножек", ext_from=Z(-M.LEG_DOWN) + 20)
+    dim_h(o, X(-375), X(375), yb, "750", ext_from=Z(-M.LEG_DOWN))
+    dim_h(o, X(-325), X(325), yb + 34, "650 между осями ножек", ext_from=Z(-M.LEG_DOWN) + 20)
     # высоты справа
-    xr = X(450)
-    dim_v(o, Z(0), Z(M.z_frame0), xr, f"{M.z_frame0}", ext_from=X(300), side="right")
+    xr = X(470)
     dim_v(o, Z(0), Z(M.z_sleeper), xr + 70, f"{M.z_sleeper}", ext_from=X(300), side="right")
     dim_v(o, Z(0), Z(M.z_deck), xr + 140, f"≈{M.z_deck} настил", ext_from=X(300), side="right")
     dim_v(o, Z(0), Z(M.HEIGHT_TOP), xr + 270, f"≈{round(M.HEIGHT_TOP, -1):.0f} верх улья", ext_from=X(300), side="right")
     dim_v(o, Z(-M.LEG_DOWN), Z(0), xr, f"{M.LEG_DOWN} в земле", ext_from=X(300), side="right")
     # выноски
-    callout(o, X(-250), Z(-250), 1, -150, 0)
-    callout(o, X(-250), Z(200), 2, -150, 0)
-    callout(o, X(-150), Z(M.z_lt - 40), 4, -130, -60)
+    callout(o, X(-325), Z(-250), 1, -110, 0)
+    callout(o, X(-240), Z(120), 2, -170, 30)
+    callout(o, X(-150), Z(M.z_lt - 40), 3, -130, -60)
     callout(o, X(-110), Z(M.z_cell0 - 5), 5, -120, 40)
     callout(o, X(0), Z((M.z_cell0 + M.z_cell1) / 2), 6, -50, 100)
     callout(o, X(110), Z(M.z_ut0 - 5), 5, 60, 80)
     callout(o, X(200), Z(M.z_ut0 + 30), 7, 110, 40)
     callout(o, X(-250), Z(M.z_rib1 - 10), 8, -200, -60)
     callout(o, X(-200), Z(M.z_deck - 10), 9, -150, -100)
-    callout(o, X(335), Z(M.z_frame0 + 20), 12, -10, 150)
-    callout(o, X(325), Z(M.z_sleeper + 120), 11, 110, 30)
+    callout(o, X(310), Z(140), 12, 30, 170)
+    callout(o, X(200), Z(M.z_sleeper + 120), 11, 230, 30)
     # зазоры
     o.append(f'<text x="{X(-430):.1f}" y="{Z(M.z_cell1) - 28:.1f}" fill="{MUTED}" font-size="12.5" text-anchor="end">зазор ≥ 5 мм между</text>')
     o.append(f'<text x="{X(-430):.1f}" y="{Z(M.z_cell1) - 13:.1f}" fill="{MUTED}" font-size="12.5" text-anchor="end">датчиком и траверсами</text>')
@@ -117,7 +116,7 @@ def front():
 
 # ---------------------------------------------------------------- вид сверху
 def top():
-    W, H = 1200, 960
+    W, H = 1200, 1000
     S = 0.62
     OX, OY = 560, 520
     X = lambda x: OX + x * S
@@ -126,17 +125,11 @@ def top():
     bx = [b for b in M.boxes if b["group"] in ("base", "cell", "top")]
     bx.sort(key=lambda b: b["z1"])
     for b in bx:
-        if b["name"].startswith("Ножка"):
+        if b["name"].startswith("Ножка") and "мастике" in b["name"]:
             continue
         op = 0.55 if b["group"] == "top" else 1
         o.append(f'<rect x="{X(b["x0"]):.1f}" y="{Y(b["y1"]):.1f}" width="{(b["x1"] - b["x0"]) * S:.1f}" height="{(b["y1"] - b["y0"]) * S:.1f}" '
                  f'fill="{b["color"]}" fill-opacity="{op}" stroke="{INK}" stroke-width="0.8" stroke-opacity="0.6"/>')
-    # ножки — пунктиром (под лежнями)
-    for b in M.boxes:
-        if b["name"] == "Ножка: брус 100×100":
-            o.append(f'<rect x="{X(b["x0"]):.1f}" y="{Y(b["y1"]):.1f}" width="{100 * S:.1f}" height="{100 * S:.1f}" fill="none" stroke="{INK}" stroke-width="1.4" stroke-dasharray="5 4"/>')
-            o.append(f'<line x1="{X(b["x0"]):.1f}" y1="{Y(b["y1"]):.1f}" x2="{X(b["x1"]):.1f}" y2="{Y(b["y0"]):.1f}" stroke="{INK}" stroke-width="0.8" stroke-dasharray="3 3"/>')
-            o.append(f'<line x1="{X(b["x1"]):.1f}" y1="{Y(b["y1"]):.1f}" x2="{X(b["x0"]):.1f}" y2="{Y(b["y0"]):.1f}" stroke="{INK}" stroke-width="0.8" stroke-dasharray="3 3"/>')
     # настил и улей
     o.append(f'<rect x="{X(-300):.1f}" y="{Y(300):.1f}" width="{600 * S:.1f}" height="{600 * S:.1f}" fill="#7A4E2D" fill-opacity="0.12" stroke="#7A4E2D" stroke-width="2" stroke-dasharray="10 6"/>')
     o.append(f'<rect x="{X(-M.HIVE_X / 2):.1f}" y="{Y(M.HIVE_Y / 2):.1f}" width="{M.HIVE_X * S:.1f}" height="{M.HIVE_Y * S:.1f}" fill="none" stroke="#C9A445" stroke-width="1.5" stroke-dasharray="3 5"/>')
@@ -144,16 +137,17 @@ def top():
     # стрелка «перед / леток»
     o.append(f'<text x="{X(0):.1f}" y="{Y(-560):.1f}" fill="{MUTED}" font-size="14" font-weight="700" text-anchor="middle">▼ перед (леток)</text>')
     # размеры
-    dim_v(o, Y(500), Y(-500), X(-470), "1000", ext_from=X(-300))
-    dim_v(o, Y(430), Y(-430), X(-400), "860", ext_from=X(-300))
-    o.append(f'<text x="{X(-400) - 8:.1f}" y="{Y(0) + 24:.1f}" fill="{MUTED}" font-size="12" text-anchor="end">оси ножек</text>')
+    dim_v(o, Y(500), Y(-500), X(-490), "1000", ext_from=X(-275))
+    dim_v(o, Y(430), Y(-430), X(-420), "860", ext_from=X(-375))
+    o.append(f'<text x="{X(-420) - 8:.1f}" y="{Y(0) + 24:.1f}" fill="{MUTED}" font-size="12" text-anchor="end">оси ножек</text>')
     dim_v(o, Y(350), Y(-350), X(600), "700 рёбра", ext_from=X(270), side="right")
     dim_v(o, Y(300), Y(-300), X(520), "600", ext_from=X(300), side="right")
     dim_h(o, X(-250), X(0), Y(500) - 40, "250", ext_from=Y(350))
     dim_h(o, X(0), X(250), Y(500) - 40, "250", ext_from=Y(350))
-    dim_h(o, X(-300), X(300), Y(-500) + 60, "600 по наружным граням лежней", ext_from=Y(-500))
+    dim_h(o, X(-375), X(375), Y(-500) + 60, "750 по наружным граням ножек", ext_from=Y(-480))
+    dim_h(o, X(-325), X(325), Y(-500) + 100, "650 между осями ножек", ext_from=Y(-430))
     # выноски
-    callout(o, X(-250), Y(-430), 1, -110, 40)
+    callout(o, X(-325), Y(-430), 1, -100, 50)
     callout(o, X(250), Y(150), 2, -90, -40)
     callout(o, X(-100), Y(470), 3, -60, -50)
     callout(o, X(-180), Y(-30), 4, -110, 70)
@@ -161,8 +155,8 @@ def top():
     callout(o, X(140), Y(0), 7, 60, 60)
     callout(o, X(0), Y(-330), 8, 50, 20)
     callout(o, X(250), Y(-250), 10, -90, 20)
-    callout(o, X(325), Y(-385), 11, 70, 50)
-    callout(o, X(370), Y(60), 12, 60, -110)
+    callout(o, X(200), Y(-385), 11, 90, 60)
+    callout(o, X(345), Y(60), 12, 80, -110)
     o.append("</svg>")
     (IMG / "build-top.svg").write_text("\n".join(o), encoding="utf-8")
 
