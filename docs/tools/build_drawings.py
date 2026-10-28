@@ -47,9 +47,9 @@ def callout(o, x, y, n, dx, dy):
 
 # ---------------------------------------------------------------- вид спереди
 def front():
-    W, H = 1200, 1290
+    W, H = 1200, 1340
     S = 0.48
-    OX, OY = 560, 840           # экранные координаты точки x=0, z=0
+    OX, OY = 560, 760           # экранные координаты точки x=0, z=0
     X = lambda x: OX + x * S
     Z = lambda z: OY - z * S
     o = head(W, H, "Вид спереди", "размеры в мм · улей показан условно — сними размеры своего · датчик L6G — по паспорту")
@@ -57,10 +57,6 @@ def front():
     o.append(f'<rect x="{X(-620):.1f}" y="{Z(0):.1f}" width="{1240 * S:.1f}" height="{(M.LEG_DOWN + 80) * S:.1f}" fill="url(#soil)"/>')
     o.append(f'<line x1="{X(-640):.1f}" y1="{Z(0):.1f}" x2="{X(640):.1f}" y2="{Z(0):.1f}" stroke="{INK}" stroke-width="1.6"/>')
     o.append(f'<text x="{X(-610):.1f}" y="{Z(0) + 20:.1f}" fill="{MUTED}" font-size="13">земля</text>')
-    # гравийная подушка под ножками
-    for sx in (-1, 1):
-        c = sx * M.LEG
-        o.append(f'<rect x="{X(c - 90):.1f}" y="{Z(-M.LEG_DOWN):.1f}" width="{180 * S:.1f}" height="{100 * S:.1f}" fill="#BDB6A6" stroke="{MUTED}" stroke-dasharray="3 3"/>')
     bx = [b for b in M.boxes if b["group"] not in ("ground",)]
     bx.sort(key=lambda b: -(b["y0"] + b["y1"]))   # дальние сначала
     for b in bx:
@@ -93,10 +89,11 @@ def front():
     dim_v(o, Z(0), Z(M.z_frame0), xr, f"{M.z_frame0}", ext_from=X(175), side="right")
     dim_v(o, Z(0), Z(M.z_deck), xr + 70, f"≈{M.z_deck} настил", ext_from=X(300), side="right")
     dim_v(o, Z(0), Z(M.HEIGHT_TOP), xr + 210, f"≈{round(M.HEIGHT_TOP, -1):.0f} верх улья", ext_from=X(300), side="right")
-    dim_v(o, Z(-M.LEG_DOWN), Z(0), xr, f"{M.LEG_DOWN} в земле", ext_from=X(325), side="right")
-    callout(o, X(-275), Z(-250), 1, -110, 0)
-    callout(o, X(-200), Z(200), 2, -180, 40)
-    callout(o, X(-60), Z(165), 3, -60, 110)
+    dim_v(o, Z(-M.LEG_DOWN), Z(0), xr, f"{M.SPIKE} пика в земле", ext_from=X(325), side="right")
+    callout(o, X(-275), Z(-300), 10, -110, 0)
+    callout(o, X(-275), Z(230), 1, -150, 30)
+    callout(o, X(-200), Z(235), 2, -150, -40)
+    callout(o, X(-60), Z(185), 3, -60, 110)
     callout(o, X(-110), Z(M.z_lt + 5), 4, -170, 10)
     callout(o, X(110), Z(M.z_ut0 - 5), 4, 120, 60)
     callout(o, X(20), Z((M.z_cell0 + M.z_cell1) / 2), 5, 30, 130)

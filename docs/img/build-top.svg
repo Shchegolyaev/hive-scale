@@ -3,17 +3,41 @@
 <rect width="1200" height="900" rx="20" fill="#FFFBF2"/>
 <text x="36" y="50" fill="#2B2118" font-size="24" font-weight="700">Вид сверху</text>
 <text x="36" y="76" fill="#6B5D4B" font-size="14">без улья · настил показан контуром · перед — внизу</text>
-<rect x="451.5" y="398.0" width="217.0" height="124.0" fill="#B9824A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="377.1" y="618.1" width="24.8" height="24.8" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="377.1" y="277.1" width="24.8" height="24.8" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="718.1" y="618.1" width="24.8" height="24.8" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="718.1" y="277.1" width="24.8" height="24.8" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="353.5" y="594.5" width="71.9" height="71.9" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="353.5" y="253.5" width="71.9" height="71.9" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="694.5" y="594.5" width="71.9" height="71.9" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="694.5" y="253.5" width="71.9" height="71.9" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="357.3" y="598.3" width="1.2" height="64.5" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="420.5" y="598.3" width="1.2" height="64.5" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="358.5" y="661.5" width="62.0" height="1.2" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="358.5" y="598.3" width="62.0" height="1.2" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="357.3" y="257.3" width="1.2" height="64.5" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="420.5" y="257.3" width="1.2" height="64.5" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="358.5" y="320.5" width="62.0" height="1.2" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="358.5" y="257.3" width="62.0" height="1.2" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="698.3" y="598.3" width="1.2" height="64.5" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="761.5" y="598.3" width="1.2" height="64.5" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="699.5" y="661.5" width="62.0" height="1.2" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="699.5" y="598.3" width="62.0" height="1.2" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="698.3" y="257.3" width="1.2" height="64.5" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="761.5" y="257.3" width="1.2" height="64.5" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="699.5" y="320.5" width="62.0" height="1.2" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="699.5" y="257.3" width="62.0" height="1.2" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="451.5" y="429.0" width="217.0" height="62.0" fill="#B9824A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="467.0" y="438.3" width="49.6" height="43.4" fill="#4F5862" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="420.5" y="258.5" width="31.0" height="403.0" fill="#C69159" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="668.5" y="258.5" width="31.0" height="403.0" fill="#C69159" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="761.5" y="239.9" width="43.4" height="99.2" fill="#E6E9EC" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="467.0" y="438.3" width="186.0" height="43.4" fill="#C9CED4" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="603.4" y="438.3" width="49.6" height="43.4" fill="#4F5862" fill-opacity="0.55" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="358.5" y="599.5" width="62.0" height="62.0" fill="#B9824A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="358.5" y="258.5" width="62.0" height="62.0" fill="#B9824A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="699.5" y="599.5" width="62.0" height="62.0" fill="#B9824A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="699.5" y="258.5" width="62.0" height="62.0" fill="#B9824A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="761.5" y="239.9" width="43.4" height="99.2" fill="#E6E9EC" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="386.4" y="627.4" width="6.2" height="6.2" fill="#4F5862" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="386.4" y="286.4" width="6.2" height="6.2" fill="#4F5862" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="727.4" y="627.4" width="6.2" height="6.2" fill="#4F5862" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
@@ -22,7 +46,7 @@
 <rect x="383.9" y="283.9" width="11.2" height="11.2" fill="#3A424A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="724.9" y="624.9" width="11.2" height="11.2" fill="#3A424A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="724.9" y="283.9" width="11.2" height="11.2" fill="#3A424A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="386.4" y="398.0" width="347.2" height="124.0" fill="#C69159" fill-opacity="0.55" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="386.4" y="429.0" width="347.2" height="62.0" fill="#C69159" fill-opacity="0.55" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="374.0" y="274.0" width="372.0" height="372.0" fill="#7A4E2D" fill-opacity="0.12" stroke="#7A4E2D" stroke-width="2" stroke-dasharray="10 6"/>
 <rect x="395.7" y="289.5" width="328.6" height="341.0" fill="none" stroke="#C9A445" stroke-width="1.5" stroke-dasharray="3 5"/>
 <text x="560.0" y="622.5" fill="#A8862E" font-size="13" text-anchor="middle">контур дна улья (условно)</text>

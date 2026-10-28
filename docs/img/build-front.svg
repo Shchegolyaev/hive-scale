@@ -1,120 +1,142 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1290" width="1200" height="1290" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1340" width="1200" height="1340" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
 <defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2B2118"/></marker><pattern id="soil" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="14" height="14" fill="#E9E1D0"/><line x1="0" y1="0" x2="0" y2="14" stroke="#CDBFA3" stroke-width="3"/></pattern></defs>
-<rect width="1200" height="1290" rx="20" fill="#FFFBF2"/>
+<rect width="1200" height="1340" rx="20" fill="#FFFBF2"/>
 <text x="36" y="50" fill="#2B2118" font-size="24" font-weight="700">Вид спереди</text>
 <text x="36" y="76" fill="#6B5D4B" font-size="14">размеры в мм · улей показан условно — сними размеры своего · датчик L6G — по паспорту</text>
-<rect x="262.4" y="840.0" width="595.2" height="326.4" fill="url(#soil)"/>
-<line x1="252.8" y1="840.0" x2="867.2" y2="840.0" stroke="#2B2118" stroke-width="1.6"/>
-<text x="267.2" y="860.0" fill="#6B5D4B" font-size="13">земля</text>
-<rect x="384.8" y="1128.0" width="86.4" height="48.0" fill="#BDB6A6" stroke="#6B5D4B" stroke-dasharray="3 3"/>
-<rect x="648.8" y="1128.0" width="86.4" height="48.0" fill="#BDB6A6" stroke="#6B5D4B" stroke-dasharray="3 3"/>
-<rect x="404.0" y="816.0" width="48.0" height="312.0" fill="#2E2A26" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="404.0" y="700.8" width="48.0" height="115.2" fill="#B9824A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="668.0" y="816.0" width="48.0" height="312.0" fill="#2E2A26" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="668.0" y="700.8" width="48.0" height="115.2" fill="#B9824A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="425.6" y="686.9" width="4.8" height="13.9" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="423.7" y="683.0" width="8.6" height="3.8" fill="#3A424A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="689.6" y="686.9" width="4.8" height="13.9" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="687.7" y="683.0" width="8.6" height="3.8" fill="#3A424A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="716.0" y="715.2" width="33.6" height="76.8" fill="#E6E9EC" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="452.0" y="724.8" width="24.0" height="48.0" fill="#C69159" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="644.0" y="724.8" width="24.0" height="48.0" fill="#C69159" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="476.0" y="748.8" width="168.0" height="24.0" fill="#B9824A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="488.0" y="744.0" width="38.4" height="4.8" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="488.0" y="710.4" width="144.0" height="33.6" fill="#C9CED4" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="593.6" y="705.6" width="38.4" height="4.8" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="425.6" y="681.6" width="268.8" height="24.0" fill="#C69159" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="416.0" y="668.6" width="288.0" height="13.0" fill="#7A4E2D" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="404.0" y="816.0" width="48.0" height="312.0" fill="#2E2A26" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="404.0" y="700.8" width="48.0" height="115.2" fill="#B9824A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="668.0" y="816.0" width="48.0" height="312.0" fill="#2E2A26" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="668.0" y="700.8" width="48.0" height="115.2" fill="#B9824A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="425.6" y="686.9" width="4.8" height="13.9" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="423.7" y="683.0" width="8.6" height="3.8" fill="#3A424A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="689.6" y="686.9" width="4.8" height="13.9" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="687.7" y="683.0" width="8.6" height="3.8" fill="#3A424A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="432.8" y="630.2" width="254.4" height="28.8" fill="#F2D27A" fill-opacity="0.25" stroke="#C9A445" stroke-width="1.2" stroke-dasharray="6 4"/>
-<rect x="432.8" y="471.8" width="254.4" height="158.4" fill="#F2D27A" fill-opacity="0.25" stroke="#C9A445" stroke-width="1.2" stroke-dasharray="6 4"/>
-<rect x="432.8" y="313.4" width="254.4" height="158.4" fill="#F2D27A" fill-opacity="0.25" stroke="#C9A445" stroke-width="1.2" stroke-dasharray="6 4"/>
-<rect x="428.0" y="275.0" width="264.0" height="38.4" fill="#F2D27A" fill-opacity="0.25" stroke="#C9A445" stroke-width="1.2" stroke-dasharray="6 4"/>
-<text x="560.0" y="360.0" fill="#A8862E" font-size="16" font-weight="700" text-anchor="middle">улей (условно)</text>
-<rect x="431.4" y="313.4" width="1.5" height="355.2" fill="#E8701A" fill-opacity="0.75"/>
-<rect x="426.6" y="273.6" width="1.5" height="39.8" fill="#E8701A" fill-opacity="0.75"/>
-<rect x="414.6" y="668.6" width="1.5" height="38.4" fill="#E8701A" fill-opacity="0.75"/>
-<rect x="414.6" y="667.2" width="18.2" height="1.5" fill="#E8701A" fill-opacity="0.75"/>
-<rect x="687.2" y="313.4" width="1.5" height="355.2" fill="#E8701A" fill-opacity="0.75"/>
-<rect x="692.0" y="273.6" width="1.5" height="39.8" fill="#E8701A" fill-opacity="0.75"/>
-<rect x="704.0" y="668.6" width="1.5" height="38.4" fill="#E8701A" fill-opacity="0.75"/>
-<rect x="687.2" y="667.2" width="18.2" height="1.5" fill="#E8701A" fill-opacity="0.75"/>
-<rect x="426.6" y="273.6" width="266.9" height="1.5" fill="#E8701A" fill-opacity="0.75"/>
-<rect x="414.6" y="705.6" width="290.9" height="1.5" fill="#E8701A" fill-opacity="0.75"/>
-<line x1="416.0" y1="668.6" x2="416.0" y2="241.0" stroke="#6B5D4B" stroke-width="0.8" stroke-dasharray="2 3"/>
-<line x1="704.0" y1="668.6" x2="704.0" y2="241.0" stroke="#6B5D4B" stroke-width="0.8" stroke-dasharray="2 3"/>
-<line x1="416.0" y1="235.0" x2="704.0" y2="235.0" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
-<rect x="514.0" y="218.0" width="92.0" height="16" fill="#FFFBF2"/>
-<text x="560.0" y="231.0" fill="#2B2118" font-size="14" font-weight="600" text-anchor="middle">600 настил</text>
-<line x1="404.0" y1="1128.0" x2="404.0" y2="1210.0" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="716.0" y1="1128.0" x2="716.0" y2="1210.0" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="404.0" y1="1204.0" x2="716.0" y2="1204.0" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
-<rect x="542.0" y="1187.0" width="36.0" height="16" fill="#FFFBF2"/>
-<text x="560.0" y="1200.0" fill="#2B2118" font-size="14" font-weight="600" text-anchor="middle">650</text>
-<line x1="428.0" y1="1148.0" x2="428.0" y2="1244.0" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="692.0" y1="1148.0" x2="692.0" y2="1244.0" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="428.0" y1="1238.0" x2="692.0" y2="1238.0" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
-<rect x="470.0" y="1221.0" width="180.0" height="16" fill="#FFFBF2"/>
-<text x="560.0" y="1234.0" fill="#2B2118" font-size="14" font-weight="600" text-anchor="middle">550 между осями ножек</text>
-<line x1="644.0" y1="840.0" x2="791.6" y2="840.0" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="644.0" y1="772.8" x2="791.6" y2="772.8" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="785.6" y1="840.0" x2="785.6" y2="772.8" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="793.6" y="811.4" fill="#2B2118" font-size="14" font-weight="600" text-anchor="start">140</text>
-<line x1="704.0" y1="840.0" x2="861.6" y2="840.0" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="704.0" y1="668.6" x2="861.6" y2="668.6" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="855.6" y1="840.0" x2="855.6" y2="668.6" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="863.6" y="759.3" fill="#2B2118" font-size="14" font-weight="600" text-anchor="start">≈357 настил</text>
-<line x1="704.0" y1="840.0" x2="1001.6" y2="840.0" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="704.0" y1="275.0" x2="1001.6" y2="275.0" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="995.6" y1="840.0" x2="995.6" y2="275.0" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="1003.6" y="562.5" fill="#2B2118" font-size="14" font-weight="600" text-anchor="start">≈1180 верх улья</text>
-<line x1="716.0" y1="1128.0" x2="791.6" y2="1128.0" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="716.0" y1="840.0" x2="791.6" y2="840.0" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="785.6" y1="1128.0" x2="785.6" y2="840.0" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="793.6" y="989.0" fill="#2B2118" font-size="14" font-weight="600" text-anchor="start">600 в земле</text>
-<line x1="428.0" y1="960.0" x2="318.0" y2="960.0" stroke="#2B2118" stroke-width="1.2"/>
-<circle cx="428.0" cy="960.0" r="3" fill="#2B2118"/>
-<circle cx="318.0" cy="960.0" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="318.0" y="965.0" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">1</text>
-<line x1="464.0" y1="744.0" x2="284.0" y2="784.0" stroke="#2B2118" stroke-width="1.2"/>
-<circle cx="464.0" cy="744.0" r="3" fill="#2B2118"/>
-<circle cx="284.0" cy="784.0" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="284.0" y="789.0" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">2</text>
-<line x1="531.2" y1="760.8" x2="471.2" y2="870.8" stroke="#2B2118" stroke-width="1.2"/>
-<circle cx="531.2" cy="760.8" r="3" fill="#2B2118"/>
-<circle cx="471.2" cy="870.8" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="471.2" y="875.8" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">3</text>
-<line x1="507.2" y1="746.4" x2="337.2" y2="756.4" stroke="#2B2118" stroke-width="1.2"/>
-<circle cx="507.2" cy="746.4" r="3" fill="#2B2118"/>
-<circle cx="337.2" cy="756.4" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="337.2" y="761.4" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">4</text>
-<line x1="612.8" y1="708.0" x2="732.8" y2="768.0" stroke="#2B2118" stroke-width="1.2"/>
-<circle cx="612.8" cy="708.0" r="3" fill="#2B2118"/>
-<circle cx="732.8" cy="768.0" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="732.8" y="773.0" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">4</text>
-<line x1="569.6" y1="727.2" x2="599.6" y2="857.2" stroke="#2B2118" stroke-width="1.2"/>
-<circle cx="569.6" cy="727.2" r="3" fill="#2B2118"/>
-<circle cx="599.6" cy="857.2" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="599.6" y="862.2" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">5</text>
-<line x1="665.6" y1="693.6" x2="815.6" y2="673.6" stroke="#2B2118" stroke-width="1.2"/>
-<circle cx="665.6" cy="693.6" r="3" fill="#2B2118"/>
-<circle cx="815.6" cy="673.6" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="815.6" y="678.6" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">6</text>
-<line x1="454.4" y1="674.4" x2="304.4" y2="594.4" stroke="#2B2118" stroke-width="1.2"/>
-<circle cx="454.4" cy="674.4" r="3" fill="#2B2118"/>
-<circle cx="304.4" cy="594.4" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="304.4" y="599.4" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">7</text>
-<line x1="692.0" y1="693.6" x2="842.0" y2="733.6" stroke="#2B2118" stroke-width="1.2"/>
-<circle cx="692.0" cy="693.6" r="3" fill="#2B2118"/>
-<circle cx="842.0" cy="733.6" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="842.0" y="738.6" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">8</text>
-<text x="406.4" y="408.0" fill="#6B5D4B" font-size="13" text-anchor="end">наклон к летку 1–2 см:</text>
-<text x="406.4" y="425.0" fill="#6B5D4B" font-size="13" text-anchor="end">передние ножки ниже задних</text>
+<rect x="262.4" y="760.0" width="595.2" height="470.4" fill="url(#soil)"/>
+<line x1="252.8" y1="760.0" x2="867.2" y2="760.0" stroke="#2B2118" stroke-width="1.6"/>
+<text x="267.2" y="780.0" fill="#6B5D4B" font-size="13">земля</text>
+<rect x="404.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="668.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="418.4" y="760.0" width="19.2" height="432.0" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="400.2" y="758.6" width="55.7" height="1.4" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="403.0" y="688.0" width="1.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="452.0" y="688.0" width="1.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="404.0" y="611.2" width="48.0" height="147.4" fill="#B9824A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="682.4" y="760.0" width="19.2" height="432.0" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="664.2" y="758.6" width="55.7" height="1.4" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="667.0" y="688.0" width="1.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="716.0" y="688.0" width="1.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="668.0" y="611.2" width="48.0" height="147.4" fill="#B9824A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="425.6" y="597.3" width="4.8" height="13.9" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="423.7" y="593.4" width="8.6" height="3.8" fill="#3A424A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="689.6" y="597.3" width="4.8" height="13.9" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="687.7" y="593.4" width="8.6" height="3.8" fill="#3A424A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="716.0" y="606.4" width="33.6" height="76.8" fill="#E6E9EC" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="404.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="668.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="452.0" y="635.2" width="24.0" height="48.0" fill="#C69159" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="644.0" y="635.2" width="24.0" height="48.0" fill="#C69159" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="476.0" y="659.2" width="168.0" height="24.0" fill="#B9824A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="488.0" y="654.4" width="38.4" height="4.8" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="488.0" y="620.8" width="144.0" height="33.6" fill="#C9CED4" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="593.6" y="616.0" width="38.4" height="4.8" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="425.6" y="592.0" width="268.8" height="24.0" fill="#C69159" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="416.0" y="579.0" width="288.0" height="13.0" fill="#7A4E2D" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="404.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="668.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="418.4" y="760.0" width="19.2" height="432.0" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="400.2" y="758.6" width="55.7" height="1.4" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="403.0" y="688.0" width="1.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="452.0" y="688.0" width="1.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="404.0" y="611.2" width="48.0" height="147.4" fill="#B9824A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="682.4" y="760.0" width="19.2" height="432.0" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="664.2" y="758.6" width="55.7" height="1.4" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="667.0" y="688.0" width="1.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="716.0" y="688.0" width="1.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="668.0" y="611.2" width="48.0" height="147.4" fill="#B9824A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="425.6" y="597.3" width="4.8" height="13.9" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="423.7" y="593.4" width="8.6" height="3.8" fill="#3A424A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="689.6" y="597.3" width="4.8" height="13.9" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="687.7" y="593.4" width="8.6" height="3.8" fill="#3A424A" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="404.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="668.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="432.8" y="540.6" width="254.4" height="28.8" fill="#F2D27A" fill-opacity="0.25" stroke="#C9A445" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="432.8" y="382.2" width="254.4" height="158.4" fill="#F2D27A" fill-opacity="0.25" stroke="#C9A445" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="432.8" y="223.8" width="254.4" height="158.4" fill="#F2D27A" fill-opacity="0.25" stroke="#C9A445" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="428.0" y="185.4" width="264.0" height="38.4" fill="#F2D27A" fill-opacity="0.25" stroke="#C9A445" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="560.0" y="280.0" fill="#A8862E" font-size="16" font-weight="700" text-anchor="middle">улей (условно)</text>
+<rect x="431.4" y="223.8" width="1.5" height="355.2" fill="#E8701A" fill-opacity="0.75"/>
+<rect x="426.6" y="184.0" width="1.5" height="39.8" fill="#E8701A" fill-opacity="0.75"/>
+<rect x="414.6" y="579.0" width="1.5" height="14.4" fill="#E8701A" fill-opacity="0.75"/>
+<rect x="414.6" y="577.6" width="18.2" height="1.5" fill="#E8701A" fill-opacity="0.75"/>
+<rect x="687.2" y="223.8" width="1.5" height="355.2" fill="#E8701A" fill-opacity="0.75"/>
+<rect x="692.0" y="184.0" width="1.5" height="39.8" fill="#E8701A" fill-opacity="0.75"/>
+<rect x="704.0" y="579.0" width="1.5" height="14.4" fill="#E8701A" fill-opacity="0.75"/>
+<rect x="687.2" y="577.6" width="18.2" height="1.5" fill="#E8701A" fill-opacity="0.75"/>
+<rect x="426.6" y="184.0" width="266.9" height="1.5" fill="#E8701A" fill-opacity="0.75"/>
+<rect x="414.6" y="592.0" width="290.9" height="1.5" fill="#E8701A" fill-opacity="0.75"/>
+<line x1="416.0" y1="579.0" x2="416.0" y2="151.4" stroke="#6B5D4B" stroke-width="0.8" stroke-dasharray="2 3"/>
+<line x1="704.0" y1="579.0" x2="704.0" y2="151.4" stroke="#6B5D4B" stroke-width="0.8" stroke-dasharray="2 3"/>
+<line x1="416.0" y1="145.4" x2="704.0" y2="145.4" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
+<rect x="514.0" y="128.4" width="92.0" height="16" fill="#FFFBF2"/>
+<text x="560.0" y="141.4" fill="#2B2118" font-size="14" font-weight="600" text-anchor="middle">600 настил</text>
+<line x1="404.0" y1="1192.0" x2="404.0" y2="1274.0" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="716.0" y1="1192.0" x2="716.0" y2="1274.0" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="404.0" y1="1268.0" x2="716.0" y2="1268.0" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
+<rect x="542.0" y="1251.0" width="36.0" height="16" fill="#FFFBF2"/>
+<text x="560.0" y="1264.0" fill="#2B2118" font-size="14" font-weight="600" text-anchor="middle">650</text>
+<line x1="428.0" y1="1212.0" x2="428.0" y2="1308.0" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="692.0" y1="1212.0" x2="692.0" y2="1308.0" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="428.0" y1="1302.0" x2="692.0" y2="1302.0" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
+<rect x="470.0" y="1285.0" width="180.0" height="16" fill="#FFFBF2"/>
+<text x="560.0" y="1298.0" fill="#2B2118" font-size="14" font-weight="600" text-anchor="middle">550 между осями ножек</text>
+<line x1="644.0" y1="760.0" x2="791.6" y2="760.0" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="644.0" y1="683.2" x2="791.6" y2="683.2" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="785.6" y1="760.0" x2="785.6" y2="683.2" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="793.6" y="726.6" fill="#2B2118" font-size="14" font-weight="600" text-anchor="start">160</text>
+<line x1="704.0" y1="760.0" x2="861.6" y2="760.0" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="704.0" y1="579.0" x2="861.6" y2="579.0" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="855.6" y1="760.0" x2="855.6" y2="579.0" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="863.6" y="674.5" fill="#2B2118" font-size="14" font-weight="600" text-anchor="start">≈377 настил</text>
+<line x1="704.0" y1="760.0" x2="1001.6" y2="760.0" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="704.0" y1="185.4" x2="1001.6" y2="185.4" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="995.6" y1="760.0" x2="995.6" y2="185.4" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="1003.6" y="477.7" fill="#2B2118" font-size="14" font-weight="600" text-anchor="start">≈1200 верх улья</text>
+<line x1="716.0" y1="1192.0" x2="791.6" y2="1192.0" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="716.0" y1="760.0" x2="791.6" y2="760.0" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="785.6" y1="1192.0" x2="785.6" y2="760.0" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="793.6" y="981.0" fill="#2B2118" font-size="14" font-weight="600" text-anchor="start">900 пика в земле</text>
+<line x1="428.0" y1="904.0" x2="318.0" y2="904.0" stroke="#2B2118" stroke-width="1.2"/>
+<circle cx="428.0" cy="904.0" r="3" fill="#2B2118"/>
+<circle cx="318.0" cy="904.0" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
+<text x="318.0" y="909.0" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">10</text>
+<line x1="428.0" y1="649.6" x2="278.0" y2="679.6" stroke="#2B2118" stroke-width="1.2"/>
+<circle cx="428.0" cy="649.6" r="3" fill="#2B2118"/>
+<circle cx="278.0" cy="679.6" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
+<text x="278.0" y="684.6" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">1</text>
+<line x1="464.0" y1="647.2" x2="314.0" y2="607.2" stroke="#2B2118" stroke-width="1.2"/>
+<circle cx="464.0" cy="647.2" r="3" fill="#2B2118"/>
+<circle cx="314.0" cy="607.2" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
+<text x="314.0" y="612.2" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">2</text>
+<line x1="531.2" y1="671.2" x2="471.2" y2="781.2" stroke="#2B2118" stroke-width="1.2"/>
+<circle cx="531.2" cy="671.2" r="3" fill="#2B2118"/>
+<circle cx="471.2" cy="781.2" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
+<text x="471.2" y="786.2" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">3</text>
+<line x1="507.2" y1="656.8" x2="337.2" y2="666.8" stroke="#2B2118" stroke-width="1.2"/>
+<circle cx="507.2" cy="656.8" r="3" fill="#2B2118"/>
+<circle cx="337.2" cy="666.8" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
+<text x="337.2" y="671.8" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">4</text>
+<line x1="612.8" y1="618.4" x2="732.8" y2="678.4" stroke="#2B2118" stroke-width="1.2"/>
+<circle cx="612.8" cy="618.4" r="3" fill="#2B2118"/>
+<circle cx="732.8" cy="678.4" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
+<text x="732.8" y="683.4" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">4</text>
+<line x1="569.6" y1="637.6" x2="599.6" y2="767.6" stroke="#2B2118" stroke-width="1.2"/>
+<circle cx="569.6" cy="637.6" r="3" fill="#2B2118"/>
+<circle cx="599.6" cy="767.6" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
+<text x="599.6" y="772.6" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">5</text>
+<line x1="665.6" y1="604.0" x2="815.6" y2="584.0" stroke="#2B2118" stroke-width="1.2"/>
+<circle cx="665.6" cy="604.0" r="3" fill="#2B2118"/>
+<circle cx="815.6" cy="584.0" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
+<text x="815.6" y="589.0" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">6</text>
+<line x1="454.4" y1="584.8" x2="304.4" y2="504.8" stroke="#2B2118" stroke-width="1.2"/>
+<circle cx="454.4" cy="584.8" r="3" fill="#2B2118"/>
+<circle cx="304.4" cy="504.8" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
+<text x="304.4" y="509.8" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">7</text>
+<line x1="692.0" y1="604.0" x2="842.0" y2="644.0" stroke="#2B2118" stroke-width="1.2"/>
+<circle cx="692.0" cy="604.0" r="3" fill="#2B2118"/>
+<circle cx="842.0" cy="644.0" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
+<text x="842.0" y="649.0" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">8</text>
+<text x="406.4" y="328.0" fill="#6B5D4B" font-size="13" text-anchor="end">наклон к летку 1–2 см:</text>
+<text x="406.4" y="345.0" fill="#6B5D4B" font-size="13" text-anchor="end">передние ножки ниже задних</text>
 </svg>
