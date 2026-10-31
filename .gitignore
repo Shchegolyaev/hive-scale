@@ -12,3 +12,6 @@ server/mosquitto/certs/*
 .DS_Store
 
 __pycache__/
+
+# Локальная библиотека для 3D-рендера (docs/tools/render3d.html)
+docs/tools/three.min.js
