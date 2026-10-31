@@ -69,9 +69,14 @@
     <text x="822" y="182" fill="#D6452B">E+</text><text x="850" y="182" fill="#2B2118">E−</text>
     <text x="822" y="246" fill="#2E8B57">A+</text><text x="850" y="246" fill="#7FA36B">A−</text>
   </g>
+  <!-- Sense-провода L6G стыкуются к E+/E− на клеммнике HX711 -->
+  <polyline points="900,206 856,206 832,186" fill="none" stroke="#3F6DB5" stroke-width="1.8"/>
+  <polyline points="900,212 860,212 838,198" fill="none" stroke="#B8860B" stroke-width="1.8"/>
+  <text x="908" y="209" fill="#3F6DB5" font-size="11" font-weight="700">S+</text>
+  <text x="908" y="222" fill="#B8860B" font-size="11" font-weight="700">S−</text>
   <rect x="900" y="172" width="240" height="74" rx="10" class="box"/>
-  <text x="1020" y="203" class="t" text-anchor="middle">Тензодатчик L6G 200 кг</text>
-  <text x="1020" y="224" class="s" text-anchor="middle">4 провода + экран на GND</text>
+  <text x="1020" y="203" class="t" text-anchor="middle">Тензодатчик L6G 300 кг</text>
+  <text x="1020" y="224" class="s" text-anchor="middle">6 проводов · экран на GND</text>
 
   <!-- I2C -->
   <line x1="310" y1="300" x2="900" y2="300" class="w" stroke="#7B5EA7"/>
