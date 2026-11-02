@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сборка платформы весов улья — интерактивная 3D-инструкция</title>
+<style>
+  :root { --foreground:#2B2118; --muted-foreground:#6B5D4B; --popover:#fff; --popover-foreground:#2B2118; --border:#bbb; --primary:#4a3f33; --primary-foreground:#fff; }
+  @media (prefers-color-scheme: dark) {
+    :root { --foreground:#e8e0d2; --muted-foreground:#a89a86; --popover:#2b2620; --popover-foreground:#e8e0d2; --border:#5a4f40; --primary:#c9a445; --primary-foreground:#2b2118; }
+    body { background:#1c1813; }
+  }
+  body { margin: 0; padding: 20px; font: 15px/1.5 'Segoe UI', Helvetica, Arial, sans-serif; color: var(--foreground); background: #FFFBF2; }
+  @media (prefers-color-scheme: dark) { body { background: #1c1813; } }
+  #assembly-viz { max-width: 1000px; margin: 0 auto; }
+  h3 { font-size: 21px; font-weight: 700; margin: 0 0 6px; }
+  .btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--foreground); font: inherit; cursor: pointer; }
+  .btn:hover { background: rgba(127,127,127,.12); }
+  .btn-primary { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+  .btn-primary:disabled, .btn:disabled { opacity: .45; cursor: default; }
+  .btn-secondary { background: rgba(127,127,127,.15); }
+  .progress { background: rgba(127,127,127,.25); border-radius: 5px; overflow: hidden; }
+  .progress-bar { background: var(--primary); height: 6px; }
+  .viz-badge { border: 1px solid var(--border); border-radius: 99px; padding: 2px 8px; font-size: 12px; }
+  .form-label { font-size: 14px; }
+  .form-range { vertical-align: middle; }
+  .text-small { font-size: 13px; } .text-muted { color: var(--muted-foreground); }
+  .viz-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .viz-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+</style>
+</head>
+<body>
+<div id="assembly-viz">
+  <h3>Сборка платформы весов — 17 шагов</h3>
+  <div class="viz-row" style="justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 12px">
+    <span id="asm-step-num" class="text-small text-muted">Шаг 1 из 17</span>
+    <span class="text-small text-muted">вращение — мышью · масштаб — колесом · деталь — наведением</span>
+  </div>
+  <div class="progress" role="progressbar" aria-label="Шаг сборки" aria-valuenow="9" aria-valuemin="1" aria-valuemax="100" style="height:6px">
+    <div id="asm-progress-bar" class="progress-bar" style="width:9%"></div>
+  </div>
+  <div style="position:relative;width:100%;margin:8px 0 2px">
+    <canvas id="asm-canvas" aria-label="3D-вид платформы: детали и крепёж добавляются по шагам сборки" role="img" style="width:100%;height:clamp(340px,58vw,620px);display:block;touch-action:none;cursor:grab;border-radius:12px"></canvas>
+    <div id="asm-labels" style="position:absolute;inset:0;pointer-events:none;overflow:hidden"></div>
+    <div id="asm-hover" class="text-small text-muted" style="min-height:1.4em;padding:2px 2px 0" aria-live="polite"></div>
+  </div>
+  <div class="viz-controls" style="align-items:center">
+    <button type="button" id="asm-tour" class="btn btn-secondary">▶ Обзор</button>
+    <button type="button" id="asm-png" class="btn">⬇ PNG ×3</button>
+    <button type="button" id="asm-prev" class="btn">‹ Назад</button>
+    <button type="button" id="asm-next" class="btn btn-primary">Далее ›</button>
+    <label class="form-label" for="asm-explode" style="margin:0 4px 0 16px;white-space:nowrap">Разборка: <span id="asm-explode-val">0%</span></label>
+    <input type="range" class="form-range" id="asm-explode" min="0" max="100" value="0" style="max-width:220px">
+  </div>
+  <div id="asm-panel" style="margin-top:10px" aria-live="polite">
+    <div class="viz-row" style="gap:8px;align-items:center">
+      <strong id="asm-step-title" style="font-weight:500"></strong>
+      <span id="asm-step-badges" class="viz-row" style="gap:6px"></span>
+    </div>
+    <p id="asm-step-desc" style="margin:4px 0 0"></p>
+    <ul id="asm-step-list" class="asm-list"></ul>
+  </div>
+  <style>
+    #assembly-viz .asm-list { margin: 6px 0 0; padding: 0; list-style: none; }
+    #assembly-viz .asm-list li { position: relative; padding: 1px 0 1px 16px; }
+    #assembly-viz .asm-list li::before { content: '—'; position: absolute; left: 0; color: var(--muted-foreground, #888); }
+    #assembly-viz .asm-note { position: absolute; left: 8px; top: 8px; display: flex; flex-direction: column; gap: 4px; pointer-events: none; max-width: 74%; }
+    #assembly-viz .asm-note div { display: flex; gap: 7px; align-items: center; background: var(--popover, #fff); color: var(--popover-foreground, #222); border: 1px solid var(--border, #bbb); border-radius: 8px; padding: 3px 10px 3px 4px; font-size: 13px; box-shadow: 0 1px 5px rgba(0,0,0,.18); }
+    #assembly-viz .asm-note b { flex: none; display: inline-flex; width: 19px; height: 19px; border-radius: 50%; background: #E8A317; color: #2B2118; font-size: 12px; font-weight: 700; align-items: center; justify-content: center; }
+    #assembly-viz .asm-dot { position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; background: #E8A317; border: 2px solid var(--foreground, #2B2118); color: #2B2118; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+  </style>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<script>
+(function () {
+  var root = document.getElementById('assembly-viz');
+  if (!root) return;
+  var canvas = document.getElementById('asm-canvas');
+  var elNum = document.getElementById('asm-step-num');
+  var elTitle = document.getElementById('asm-step-title');
+  var elDesc = document.getElementById('asm-step-desc');
+  var elList = document.getElementById('asm-step-list');
+  var elBadges = document.getElementById('asm-step-badges');
+  var elPrev = document.getElementById('asm-prev');
+  var elNext = document.getElementById('asm-next');
+  var elBar = document.getElementById('asm-progress-bar');
+  var elBarWrap = elBar.parentElement;
+  var elHover = document.getElementById('asm-hover');
+  var elSlider = document.getElementById('asm-explode');
+  var elSliderVal = document.getElementById('asm-explode-val');
+
+  var DATA = {"boxes":[{"name":"Забивная опора: пика","x0":-295,"x1":-255,"y0":-295,"y1":-255,"z0":-900,"z1":0,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: пластина","x0":-333,"x1":-217,"y0":-333,"y1":-217,"z0":0,"z1":3,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":-327,"x1":-325,"y0":-327,"y1":-223,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":-225,"x1":-223,"y0":-327,"y1":-223,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":-325,"x1":-225,"y0":-327,"y1":-325,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":-325,"x1":-225,"y0":-225,"y1":-223,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Ножка: брус 100×100","x0":-325,"x1":-225,"y0":-325,"y1":-225,"z0":3,"z1":300,"color":"#B9824A","group":"base","num":1},{"name":"Забивная опора: пика","x0":-295,"x1":-255,"y0":255,"y1":295,"z0":-900,"z1":0,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: пластина","x0":-333,"x1":-217,"y0":217,"y1":333,"z0":0,"z1":3,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":-327,"x1":-325,"y0":223,"y1":327,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":-225,"x1":-223,"y0":223,"y1":327,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":-325,"x1":-225,"y0":223,"y1":225,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":-325,"x1":-225,"y0":325,"y1":327,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Ножка: брус 100×100","x0":-325,"x1":-225,"y0":225,"y1":325,"z0":3,"z1":300,"color":"#B9824A","group":"base","num":1},{"name":"Забивная опора: пика","x0":255,"x1":295,"y0":-295,"y1":-255,"z0":-900,"z1":0,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: пластина","x0":217,"x1":333,"y0":-333,"y1":-217,"z0":0,"z1":3,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":223,"x1":225,"y0":-327,"y1":-223,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":325,"x1":327,"y0":-327,"y1":-223,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":225,"x1":325,"y0":-327,"y1":-325,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":225,"x1":325,"y0":-225,"y1":-223,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Ножка: брус 100×100","x0":225,"x1":325,"y0":-325,"y1":-225,"z0":3,"z1":300,"color":"#B9824A","group":"base","num":1},{"name":"Забивная опора: пика","x0":255,"x1":295,"y0":255,"y1":295,"z0":-900,"z1":0,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: пластина","x0":217,"x1":333,"y0":217,"y1":333,"z0":0,"z1":3,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":223,"x1":225,"y0":223,"y1":327,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":325,"x1":327,"y0":223,"y1":327,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":225,"x1":325,"y0":223,"y1":225,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Забивная опора: стакан","x0":225,"x1":325,"y0":325,"y1":327,"z0":3,"z1":150,"color":"#8D99A6","group":"base","num":10},{"name":"Ножка: брус 100×100","x0":225,"x1":325,"y0":225,"y1":325,"z0":3,"z1":300,"color":"#B9824A","group":"base","num":1},{"name":"Лежень: доска 50×100×650","x0":-225,"x1":-175,"y0":-325,"y1":325,"z0":160,"z1":260,"color":"#C69159","group":"base","num":2},{"name":"Лежень: доска 50×100×650","x0":175,"x1":225,"y0":-325,"y1":325,"z0":160,"z1":260,"color":"#C69159","group":"base","num":2},{"name":"Средняя поперечина: доска 50×100×350 плашмя","x0":-175,"x1":175,"y0":-50,"y1":50,"z0":160,"z1":210,"color":"#B9824A","group":"base","num":3},{"name":"Проставка сталь 10 мм (неподвижный конец)","x0":-87,"x1":-7,"y0":-32.5,"y1":32.5,"z0":210,"z1":220,"color":"#4F5862","group":"base","num":4},{"name":"Датчик L6G 300 кг","x0":-87,"x1":87,"y0":-32.5,"y1":32.5,"z0":220,"z1":280,"color":"#C9CED4","group":"cell","num":5},{"name":"Проставка сталь 10 мм (грузовой конец)","x0":7,"x1":87,"y0":-32.5,"y1":32.5,"z0":280,"z1":290,"color":"#4F5862","group":"top","num":4},{"name":"Верхняя траверса: доска 50×100×560 плашмя","x0":-280,"x1":280,"y0":-50,"y1":50,"z0":290,"z1":340,"color":"#C69159","group":"top","num":6},{"name":"Настил: фанера 27 мм, 600×600","x0":-300,"x1":300,"y0":-300,"y1":300,"z0":340,"z1":367,"color":"#7A4E2D","group":"deck","num":7},{"name":"Стоп-болт: шпилька М10","x0":-280,"x1":-270,"y0":-280,"y1":-270,"z0":300,"z1":329,"color":"#4F5862","group":"base","num":8},{"name":"Стоп-болт: гайка","x0":-284,"x1":-266,"y0":-284,"y1":-266,"z0":329,"z1":337,"color":"#3A424A","group":"base","num":8},{"name":"Стоп-болт: шпилька М10","x0":-280,"x1":-270,"y0":270,"y1":280,"z0":300,"z1":329,"color":"#4F5862","group":"base","num":8},{"name":"Стоп-болт: гайка","x0":-284,"x1":-266,"y0":266,"y1":284,"z0":329,"z1":337,"color":"#3A424A","group":"base","num":8},{"name":"Стоп-болт: шпилька М10","x0":270,"x1":280,"y0":-280,"y1":-270,"z0":300,"z1":329,"color":"#4F5862","group":"base","num":8},{"name":"Стоп-болт: гайка","x0":266,"x1":284,"y0":-284,"y1":-266,"z0":329,"z1":337,"color":"#3A424A","group":"base","num":8},{"name":"Стоп-болт: шпилька М10","x0":270,"x1":280,"y0":270,"y1":280,"z0":300,"z1":329,"color":"#4F5862","group":"base","num":8},{"name":"Стоп-болт: гайка","x0":266,"x1":284,"y0":266,"y1":284,"z0":329,"z1":337,"color":"#3A424A","group":"base","num":8},{"name":"Корпус электроники IP65","x0":325,"x1":395,"y0":195,"y1":355,"z0":160,"z1":320,"color":"#E6E9EC","group":"base","num":9},{"name":"Ножка дна улья","x0":-240,"x1":-210,"y0":-250,"y1":-220,"z0":367,"z1":387,"color":"#E3BE5A","group":"hive","num":null},{"name":"Ножка дна улья","x0":-240,"x1":-210,"y0":220,"y1":250,"z0":367,"z1":387,"color":"#E3BE5A","group":"hive","num":null},{"name":"Ножка дна улья","x0":-15,"x1":15,"y0":-250,"y1":-220,"z0":367,"z1":387,"color":"#E3BE5A","group":"hive","num":null},{"name":"Ножка дна улья","x0":-15,"x1":15,"y0":220,"y1":250,"z0":367,"z1":387,"color":"#E3BE5A","group":"hive","num":null},{"name":"Ножка дна улья","x0":210,"x1":240,"y0":-250,"y1":-220,"z0":367,"z1":387,"color":"#E3BE5A","group":"hive","num":null},{"name":"Ножка дна улья","x0":210,"x1":240,"y0":220,"y1":250,"z0":367,"z1":387,"color":"#E3BE5A","group":"hive","num":null},{"name":"Дно улья","x0":-265,"x1":265,"y0":-275,"y1":275,"z0":387,"z1":447,"color":"#E3BE5A","group":"hive","num":null},{"name":"Корпус улья","x0":-265,"x1":265,"y0":-275,"y1":275,"z0":447,"z1":777,"color":"#F2D27A","group":"hive","num":null},{"name":"Корпус улья","x0":-265,"x1":265,"y0":-275,"y1":275,"z0":777,"z1":1107,"color":"#F2D27A","group":"hive","num":null},{"name":"Крыша улья","x0":-275,"x1":275,"y0":-285,"y1":285,"z0":1107,"z1":1187,"color":"#C9A445","group":"hive","num":null},{"name":"Ремень","x0":-268,"x1":-265,"y0":-163,"y1":-137,"z0":367,"z1":1107,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":-278,"x1":-275,"y0":-163,"y1":-137,"z0":1107,"z1":1190,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":-303,"x1":-300,"y0":-163,"y1":-137,"z0":337,"z1":367,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":-303,"x1":-265,"y0":-163,"y1":-137,"z0":367,"z1":370,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":265,"x1":268,"y0":-163,"y1":-137,"z0":367,"z1":1107,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":275,"x1":278,"y0":-163,"y1":-137,"z0":1107,"z1":1190,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":300,"x1":303,"y0":-163,"y1":-137,"z0":337,"z1":367,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":265,"x1":303,"y0":-163,"y1":-137,"z0":367,"z1":370,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":-278,"x1":278,"y0":-163,"y1":-137,"z0":1187,"z1":1190,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":-303,"x1":303,"y0":-163,"y1":-137,"z0":337,"z1":340,"color":"#E8701A","group":"strap","num":null},{"name":"Храповик","x0":268,"x1":274,"y0":-168,"y1":-132,"z0":617,"z1":667,"color":"#3A424A","group":"strap","num":null},{"name":"Ремень","x0":-268,"x1":-265,"y0":137,"y1":163,"z0":367,"z1":1107,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":-278,"x1":-275,"y0":137,"y1":163,"z0":1107,"z1":1190,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":-303,"x1":-300,"y0":137,"y1":163,"z0":337,"z1":367,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":-303,"x1":-265,"y0":137,"y1":163,"z0":367,"z1":370,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":265,"x1":268,"y0":137,"y1":163,"z0":367,"z1":1107,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":275,"x1":278,"y0":137,"y1":163,"z0":1107,"z1":1190,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":300,"x1":303,"y0":137,"y1":163,"z0":337,"z1":367,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":265,"x1":303,"y0":137,"y1":163,"z0":367,"z1":370,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":-278,"x1":278,"y0":137,"y1":163,"z0":1187,"z1":1190,"color":"#E8701A","group":"strap","num":null},{"name":"Ремень","x0":-303,"x1":303,"y0":137,"y1":163,"z0":337,"z1":340,"color":"#E8701A","group":"strap","num":null},{"name":"Храповик","x0":268,"x1":274,"y0":132,"y1":168,"z0":617,"z1":667,"color":"#3A424A","group":"strap","num":null}]};
+
+  var STEPS = [
+    { t: 'Опоры', badges: ['поз. 10'],
+      d: 'Четыре стальные забивные опоры вбиты кувалдой по углам шаблона 550×550 мм: стаканы на земле, пики на 90 см в грунте. Дерево земли касаться не будет.',
+      m: function (b) { return b.name.indexOf('Забивная опора') === 0; } },
+    { t: 'Ножка №1 — первая, передняя левая', badges: ['поз. 1'],
+      d: 'Брус 100×100 вставлен в стакан и прикручен саморезами через готовые отверстия стакана. Первая ножка задаёт уровень: задние — 300 мм над землёй.',
+      m: function (b) { return b.name.indexOf('Ножка: брус') === 0 && b.x0 < 0 && b.y0 < 0; } },
+    { t: 'Ножки №2–4', badges: ['поз. 1'],
+      d: 'Остальные три — так же, по уровню. Передние ниже задних на 1–2 см: улей наклонится к летку, конденсат потечёт наружу.',
+      m: function (b) { return b.name.indexOf('Ножка: брус') === 0; } },
+    { t: 'Лежень левый', badges: ['поз. 2'],
+      d: 'Доска 50×100 на ребро — к внутренним граням левых ножек, низ на 160 мм от земли. Через лежень и ножку — два болта М10×160 насквозь.',
+      m: function (b) { return b.name.indexOf('Лежень') === 0 && b.x0 < 0; } },
+    { t: 'Лежень правый', badges: ['поз. 2'],
+      d: 'Зеркально левому, теми же болтами М10. Два лежня образуют «Н»-образную раму.',
+      m: function (b) { return b.name.indexOf('Лежень') === 0 && b.x0 > 0; } },
+    { t: 'Уголок левый — до поперечины', badges: ['крепёж'],
+      d: 'Усиленный уголок 70×70 крепим к внутренней грани левого лежня ДО поперечины: вертикальная полка — к лежню, горизонтальная — полка-выступ, вровень с низом лежней (160 мм), на которую потом ляжет поперечина.',
+      m: function () { return false; } },
+    { t: 'Уголок правый — до поперечины', badges: ['крепёж'],
+      d: 'Зеркально левому. Две полки «смотрят» друг на друга и стоят вровень — на них ляжет поперечина.',
+      m: function () { return false; } },
+    { t: 'Средняя поперечина', badges: ['поз. 3'],
+      d: 'Доска 50×100 плашмя, подрезанная точно между лежнями, ложится на полки уголков — и закрепляется глухарями через лежни в торцы. Теперь она несёт весь улей.',
+      m: function (b) { return b.name.indexOf('Средняя поперечина') === 0; } },
+    { t: 'Проставка и датчик', badges: ['поз. 4', 'поз. 5'],
+      d: 'На поперечину — стальная проставка 10 мм, на неё — датчик L6G: стрелкой вниз, по нагрузке. Кабель выходит со стороны неподвижного конца.',
+      m: function (b) { return (b.name.indexOf('Проставка') === 0 && b.name.indexOf('неподвижный') >= 0) || b.name.indexOf('Датчик') === 0; } },
+    { t: 'Болты М8 — крепим датчик снизу', badges: ['поз. 4'],
+      d: 'Сквозь пластину 60×60×4 и поперечину — четыре болта М8 в резьбовые отверстия датчика. Головки остаются под пластиной, снизу.',
+      m: function () { return false; } },
+    { t: 'Траверса', badges: ['поз. 6'],
+      d: 'Проставка на грузовой конец датчика, сверху — доска-траверса 560 мм вдоль датчика. Между траверсой и лежнями — зазор, касаться нельзя.',
+      m: function (b) { return (b.name.indexOf('Проставка') === 0 && b.name.indexOf('грузовой') >= 0) || b.name.indexOf('Верхняя траверса') === 0; } },
+    { t: 'Болты М8 — траверса к датчику', badges: ['поз. 4'],
+      d: 'Сверху — через кузовные шайбы М8 Ø30 (не пластины: пластина мешала бы настилу). Головки с шайбами потом утонут в гнёздах фанеры.',
+      m: function () { return false; } },
+    { t: 'Настил', badges: ['поз. 7'],
+      d: 'Фанера 27 мм ложится на траверсу по центру: настил → траверса → датчик — единственный путь веса. Над шайбами с головками — гнёзда Ø32 на 9 мм.',
+      m: function (b) { return b.name.indexOf('Настил') === 0; } },
+    { t: 'Стоп-болты', badges: ['поз. 8'],
+      d: 'Шуруп-шпильки М10 — в торцы ножек, под углами настила, с зазором 3 мм. Удар по углу настила примет стоп-болт, а не датчик.',
+      m: function (b) { return b.name.indexOf('Стоп-болт') === 0; } },
+    { t: 'Электроника', badges: ['поз. 9'],
+      d: 'Корпус IP65 — на наружной грани задней ножки, на неподвижной части. Дальше — подключение и калибровка.',
+      m: function (b) { return b.name.indexOf('Корпус электроники') === 0; } },
+    { t: 'Улей', badges: [],
+      d: 'Дно улья — по центру настила. Путь веса один: настил → траверса → датчик → поперечина → рама.',
+      m: function (b) { return b.group === 'hive'; } },
+    { t: 'Ремни', badges: [],
+      d: 'Два ремня с храповиками — параллельно траверсе, в 15 см от оси: охватывают только улей и настил.',
+      m: function (b) { return b.group === 'strap'; } }
+  ];
+
+  var DRILL = [
+    ['Кувалда 3–5 кг, вертикаль — уровнем каждые несколько ударов', 'Сверлить нечего: отверстия Ø5 уже в стаканах'],
+    ['Отверстия Ø5 в стакане уже есть — сверлить не нужно', 'Саморез 5×50 оцинкованный — 4 шт. через стакан в брус'],
+    ['То же на трёх остальных ножках', 'Передние ножки — ниже задних на 1–2 см (наклон к летку)'],
+    ['Сверло Ø11 насквозь: лежень (50 мм) + ножка (100 мм)', 'Болт М10×160, две шайбы и гайка — ключ 17, по 2 на ножку'],
+    ['Зеркально: Ø11 насквозь, болты М10×160 — ещё 4 шт.'],
+    ['Сверлить не нужно', 'Саморез 6×40 — горизонтально, вертикальная полка к внутренней грани лежня, ~3 шт.', 'Горизонтальная полка — вровень с низом лежней: на неё ляжет поперечина'],
+    ['Зеркально: уголок 70×70 к правому лежню, саморезы 6×40'],
+    ['Сверло Ø6 через лежень в торец поперечины, глубина ~70 мм', 'Глухарь 10×120 с шайбой — по 2 на торец', 'Верхние саморезы полок (уже в поперечину) — 6×40, ~3 шт.'],
+    ['Сверло Ø9 насквозь поперечины по отверстиям датчика', 'Датчик — стрелкой вниз, кабелем к неподвижному концу'],
+    ['Через пластину 60×60×4 (отверстие Ø9)', 'Болт М8 полная резьба 80–90 мм, момент 25 Н·м, подтянуть через месяц'],
+    ['Зазор траверса ↔ лежни — не меньше 3–4 см'],
+    ['Сверло Ø9 насквозь траверсы', 'Болты М8 через кузовные шайбы Ø30 (пластина сверху мешала бы настилу), 25 Н·м'],
+    ['Гнёзда Ø32 на ~9 мм (перовое/Форстнер) над кузовными шайбами с головками', 'Саморез 6×60 потайной — 8 шт., не попади в болты М8'],
+    ['Сверло Ø8 в торец ножки, ~70 мм, не насквозь', 'Шпилька М10×100 + 2 гайки: зазор до настила 3 мм, законтрить'],
+    ['—', 'Крепёж корпуса — по его закладным'],
+    ['—', 'Улей просто стоит на настиле, ничего не крепится'],
+    ['—', 'Ремень затягивай храповиком: плотно, но без продавливания корпусов']
+  ];
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var state = { step: 0, explode: 0 };
+  try {
+    var saved = window.zcode && window.zcode.widgetState && window.zcode.widgetState.privateContent;
+    if (saved) {
+      if (typeof saved.step === 'number' && saved.step >= 0 && saved.step < STEPS.length) state.step = saved.step;
+      if (typeof saved.explode === 'number') state.explode = Math.min(100, Math.max(0, saved.explode));
+    }
+  } catch (e) {}
+
+  if (typeof THREE === 'undefined') {
+    elTitle.textContent = 'Библиотека 3D не загрузилась';
+    elDesc.textContent = 'Проверь подключение к сети и обнови страницу.';
+    return;
+  }
+
+  var cs = getComputedStyle(root);
+  var fg = cs.getPropertyValue('--foreground').trim() || '#333';
+  var mutedCol = cs.getPropertyValue('--muted').trim() || '#ccc';
+
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setClearColor(0x000000, 0);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(38, 2, 10, 12000);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x9a8f80, 0.85));
+  var sun = new THREE.DirectionalLight(0xffffff, 0.8);
+  sun.position.set(-1100, 1900, 1300);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  Object.assign(sun.shadow.camera, { left: -1300, right: 1300, top: 1500, bottom: -900, near: 100, far: 6000 });
+  sun.shadow.bias = -0.0006;
+  scene.add(sun);
+
+  var groundMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(mutedCol), roughness: 1, transparent: true, opacity: 0.32, depthWrite: false });
+  var ground = new THREE.Mesh(new THREE.CircleGeometry(980, 48), groundMat);
+  ground.rotation.x = -Math.PI / 2;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  var edgeMat = new THREE.LineBasicMaterial({ color: new THREE.Color(fg), transparent: true, opacity: 0.28 });
+
+  function toThree(x, y, z) { return new THREE.Vector3(x, z, -y); }
+  function dirThree(x, y, z) { return toThree(x, y, z).normalize(); }
+
+  // ---- реестр всех показываемых объектов ----
+  var items = [];   // {obj, step, base, ex, kind: fade|screw|slide, axis, spin, mats}
+  var pickMeshes = [];
+
+  function register(o) {
+    o.obj.visible = false;
+    o.op = 1; o.opT = 1; o.lastO = -1;
+    o.mats = [];
+    o.obj.traverse(function (ch) {
+      if (ch.isMesh) {
+        ch.userData.pickName = o.name;
+        ch.userData.pickNum = o.num;
+        ch.castShadow = !o.noShadow;
+        ch.receiveShadow = true;
+        if (o.edges && ch.geometry.type === 'BoxGeometry') ch.add(new THREE.LineSegments(new THREE.EdgesGeometry(ch.geometry), edgeMat));
+        ch.material = ch.material.clone();   // у каждого объекта свой материал: фокус-затемнение не заденет соседей
+        o.mats.push(ch.material);
+        pickMeshes.push(ch);
+      }
+    });
+    scene.add(o.obj);
+    items.push(o);
+  }
+
+  function defaultEx(cx, cy, cz) {
+    var hl = Math.hypot(cx, cy) || 1;
+    var hF = Math.min(1, hl / 275);
+    return toThree((cx / hl) * 360 * hF, (cy / hl) * 360 * hF, 140 + 500 * Math.max(0, (cz - 160) / 1030));
+  }
+
+  DATA.boxes.forEach(function (b) {
+    var stepIdx = -1;
+    for (var i = 0; i < STEPS.length; i++) { if (STEPS[i].m(b)) { stepIdx = i; break; } }
+    if (stepIdx < 0) return;
+    var sx = b.x1 - b.x0, sy = b.y1 - b.y0, sz = b.z1 - b.z0;
+    var geo = new THREE.BoxGeometry(sx, sz, sy);
+    var metal = b.color === '#C9CED4' || b.color === '#8D99A6' || b.color === '#4F5862' || b.color === '#3A424A';
+    var mat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(b.color).convertSRGBToLinear(),
+      roughness: metal ? 0.4 : 0.85,
+      metalness: metal ? 0.3 : 0
+    });
+    var mesh = new THREE.Mesh(geo, mat);
+    var cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2, cz = (b.z0 + b.z1) / 2;
+    mesh.position.copy(toThree(cx, cy, cz));
+    mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), edgeMat));
+    register({ obj: mesh, name: b.name, num: b.num, step: stepIdx, base: toThree(cx, cy, cz), ex: defaultEx(cx, cy, cz), kind: 'fade', anim: 1 });
+  });
+
+  // ---- крепёж ----
+  var MAT_ZINC = new THREE.MeshStandardMaterial({ color: new THREE.Color('#B9C1C9').convertSRGBToLinear(), roughness: 0.35, metalness: 0.5 });
+  var MAT_DARK = new THREE.MeshStandardMaterial({ color: new THREE.Color('#3A424A').convertSRGBToLinear(), roughness: 0.4, metalness: 0.4 });
+  var MAT_ANG = new THREE.MeshStandardMaterial({ color: new THREE.Color('#5B6670').convertSRGBToLinear(), roughness: 0.45, metalness: 0.4 });
+  var MAT_PLATE = new THREE.MeshStandardMaterial({ color: new THREE.Color('#4A545E').convertSRGBToLinear(), roughness: 0.4, metalness: 0.45 });
+  var HOLE_MAT = new THREE.MeshBasicMaterial({ color: 0x2a231b });
+
+  // тёмный кружок = отверстие, которое сверлим заранее (диаметр = сверло)
+  function hole(step, x, y, z, dia, nx, ny, nz) {
+    var m = new THREE.Mesh(new THREE.CircleGeometry(dia / 2, 24), HOLE_MAT);
+    var p = toThree(x, y, z);
+    m.position.copy(p);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), dirThree(nx, ny, nz));
+    register({ obj: m, name: 'Отверстие Ø' + dia + (dia >= 32 ? ' — гнездо под шайбу с головкой' : ' — сверлить заранее'), num: null, step: step, base: p.clone(), ex: toThree(nx * 50, ny * 50, nz * 50), kind: 'fade', anim: 1, noShadow: true });
+  }
+
+  // болт: локальная ось Y = ось болта, головка у y=0, стержень в +Y
+  function makeBolt(len, r, headR, headH, mat) {
+    var spinner = new THREE.Group();
+    var head = new THREE.Mesh(new THREE.CylinderGeometry(headR, headR, headH, 6), mat);
+    head.position.y = headH / 2;
+    var shaft = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 10), mat);
+    shaft.position.y = len / 2;
+    spinner.add(head); spinner.add(shaft);
+    return spinner;
+  }
+  function addNut(spinner, y, mat) {
+    var nut = new THREE.Mesh(new THREE.CylinderGeometry(8.6, 8.6, 8, 6), mat);
+    nut.userData.fy = y;
+    nut.visible = false;
+    spinner.userData.nut = nut;   // гайку перенесём в группу в addFastener: накручивается ПОСЛЕ болта
+  }
+  function addFastener(o, spinner, axisM, baseM, exM) {
+    var g = new THREE.Group();
+    g.position.copy(toThree(baseM.x, baseM.y, baseM.z));
+    g.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dirThree(axisM.x, axisM.y, axisM.z));
+    g.add(spinner);
+    var nut = spinner.userData.nut;
+    if (nut) { nut.position.y = nut.userData.fy + 55; g.add(nut); }
+    register({ obj: g, name: o.name, num: o.num, step: o.step, base: g.position.clone(), ex: exM, kind: o.kind || 'screw', axis: dirThree(axisM.x, axisM.y, axisM.z), spin: spinner, anim: 1, nutMesh: nut || null, nutFy: nut ? nut.userData.fy : 0 });
+  }
+
+  // 1) саморезы 5×50 в стаканах (шаг 2: ножки): через стенки стакана в брус
+  [-1, 1].forEach(function (sx) {
+    [-1, 1].forEach(function (sy) {
+      var ly = sy * 275;
+      [55, 115].forEach(function (z) {
+        [{ x: sx * 326, ax: -sx }, { x: sx * 224, ax: sx }].forEach(function (d) {
+          var sp = new THREE.Group();
+          var sh = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 50, 8), MAT_ZINC); sh.position.y = 25;
+          var hd = new THREE.Mesh(new THREE.CylinderGeometry(4.5, 4.5, 3.5, 10), MAT_ZINC); hd.position.y = 1.75;
+          sp.add(hd); sp.add(sh);
+          addFastener({ name: 'Саморез 5×50: стакан → ножка (отверстие Ø5 в стакане уже есть)', num: 1, step: (sx < 0 && sy < 0) ? 1 : 2 },
+            sp, { x: d.ax, y: 0, z: 0 }, { x: d.x, y: ly, z: z }, defaultEx(sx * 275, ly, z));
+        });
+      });
+    });
+  });
+
+  // 2) болты М10×160 сквозь лежень в ножку (шаг 3: лежни), по 2 на ножку
+  [-1, 1].forEach(function (sx) {
+    [-1, 1].forEach(function (sy) {
+      var ly = sy * 275;
+      [190, 235].forEach(function (z) {
+        var sp = makeBolt(160, 5, 8.6, 7, MAT_ZINC);
+        var washer = new THREE.Mesh(new THREE.CylinderGeometry(11, 11, 2, 12), MAT_PLATE);
+        washer.position.y = 150.5; sp.add(washer);
+        addNut(sp, 154, MAT_ZINC);
+        addFastener({ name: 'Болт М10×160 насквозь: лежень + ножка · сверло Ø11 · ключ 17', num: 2, step: sx < 0 ? 3 : 4 },
+          sp, { x: sx, y: 0, z: 0 }, { x: sx * 175, y: ly + sy * 25, z: z }, dirThree(sx, 0, 0).multiplyScalar(320));
+      });
+    });
+  });
+
+  // 3) глухари 10×120 в торцы поперечины (шаг 4), по 2 на торец
+  [-1, 1].forEach(function (sx) {
+    [-25, 25].forEach(function (y) {
+      var sp = makeBolt(120, 5, 8, 6.5, MAT_DARK);
+      var washer = new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 2, 12), MAT_ZINC);
+      washer.position.y = 121; sp.add(washer);
+      addFastener({ name: 'Глухарь 10×120: лежень → торец поперечины · сверло Ø6 на ~70 мм', num: 3, step: 7 },
+        sp, { x: -sx, y: 0, z: 0 }, { x: sx * 225, y: y, z: 185 }, dirThree(sx, 0, 0).multiplyScalar(300));
+    });
+  });
+
+  // 4) уголки 70×70 под поперечиной + саморезы 6×40 (шаг 4)
+  [-1, 1].forEach(function (sx) {
+    var g = new THREE.Group();
+    var v = new THREE.Mesh(new THREE.BoxGeometry(5, 70, 70), MAT_ANG);
+    v.position.set(sx * 172.5, 190, 0);
+    var h = new THREE.Mesh(new THREE.BoxGeometry(70, 4, 70), MAT_ANG);
+    h.position.set(sx * 142.5, 158, 0);
+    g.add(v); g.add(h);
+    [-30, 0, 30].forEach(function (yy) {
+      var s1 = new THREE.Group();
+      var a = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 8), MAT_ZINC); a.position.y = 20;
+      var b = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_ZINC); b.position.y = 1.5;
+      s1.add(a); s1.add(b);
+      addFastener({ name: 'Саморез 6×40: уголок → поперечина (крутим, когда доска уже лежит на полке)', num: 3, step: 7 },
+        s1, { x: 0, y: 0, z: 1 }, { x: sx * 118, y: yy, z: 155 }, defaultEx(sx * 118, yy, 155));
+      var s2 = new THREE.Group();
+      var a2 = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 8), MAT_ZINC); a2.position.y = 20;
+      var b2 = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_ZINC); b2.position.y = 1.5;
+      s2.add(a2); s2.add(b2);
+      addFastener({ name: 'Саморез 6×40: вертикальная полка уголка → лежень (до поперечины)', num: 3, step: sx < 0 ? 5 : 6 },
+        s2, { x: sx, y: 0, z: 0 }, { x: sx * 168, y: yy, z: 185 }, defaultEx(sx * 190, yy, 185));
+    });
+    register({ obj: g, name: 'Уголок усиленный 70×70: полка-выступ под поперечину + к лежню', num: 3, step: sx < 0 ? 5 : 6, base: new THREE.Vector3(0, 0, 0), ex: dirThree(sx, 0, 0).multiplyScalar(340), kind: 'slide', axis: dirThree(sx, 0, 0), anim: 1, edges: true });
+  });
+
+  // 5) пластины 60×60×4 и болты М8 (шаг 5 — низ, шаг 6 — верх)
+  function plate(name, step, cx, cy, cz) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(60, 4, 60), MAT_PLATE);
+    m.position.copy(toThree(cx, cy, cz));
+    register({ obj: m, name: name, num: 4, step: step, base: toThree(cx, cy, cz), ex: toThree(0, 0, cz > 300 ? 200 : 60), kind: 'slide', axis: dirThree(0, 0, -1), anim: 1, edges: true });
+  }
+  plate('Пластина 60×60×4 — только снизу, под поперечиной (сверху ей мешал бы настил)', 9, -47, 0, 158, false);
+
+  // сверху вместо пластины — кузовные шайбы Ø30: не мешают настилу, прячутся в гнёзда Ø32
+  [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) {
+    var w = new THREE.Mesh(new THREE.CylinderGeometry(15, 15, 3, 20), MAT_PLATE);
+    w.position.copy(toThree(p[0], p[1], 341.5));
+    register({ obj: w, name: 'Кузовная шайба М8 Ø30 · в фанере под ней гнездо Ø32 на 9 мм', num: 4, step: 11, base: w.position.clone(), ex: toThree(0, 0, 200), kind: 'fade', anim: 1 });
+  });
+
+  [[-65, -17], [-65, 17], [-30, -17], [-30, 17]].forEach(function (p) {
+    var sp = makeBolt(78, 4, 7, 6.5, MAT_ZINC);
+    var washer = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 2, 12), MAT_PLATE);
+    washer.position.y = 1; sp.add(washer);
+    addFastener({ name: 'Болт М8 через пластину в датчик · сверло Ø9 насквозь · момент 25 Н·м', num: 4, step: 9 },
+      sp, { x: 0, y: 0, z: 1 }, { x: p[0], y: p[1], z: 150 }, toThree(0, 0, -260));
+  });
+  [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) {
+    var sp = makeBolt(66, 4, 7, 6.5, MAT_ZINC);
+    var washer = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 2, 12), MAT_PLATE);
+    washer.position.y = 1; sp.add(washer);
+    addFastener({ name: 'Болт М8 через кузовную шайбу в датчик · сверло Ø9 насквозь · момент 25 Н·м', num: 4, step: 11 },
+      sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 344 }, toThree(0, 0, 120));
+  });
+
+  // 7) саморезы 6×60 настил → траверса (шаг 12)
+  [[-230, -35], [-230, 35], [-100, -35], [-100, 35], [100, -35], [100, 35], [230, -35], [230, 35]].forEach(function (p) {
+    var sp = new THREE.Group();
+    var sh = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 60, 8), MAT_ZINC); sh.position.y = 30;
+    var hd = new THREE.Mesh(new THREE.CylinderGeometry(5.5, 5.5, 3, 12), MAT_ZINC); hd.position.y = 1.5;
+    sp.add(hd); sp.add(sh);
+    addFastener({ name: 'Саморез 6×60 потайной: настил → траверса · рядом гнездо Ø15–18 под болт М8', num: 7, step: 12 },
+      sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 367 }, toThree(p[0] * 0.3, p[1] * 0.3, 420));
+  });
+
+  // 8) отверстия и гнёзда — видны в дереве заранее, до вкручивания
+  [-1, 1].forEach(function (sx) {
+    [-1, 1].forEach(function (sy) {
+      [190, 235].forEach(function (z) {
+        hole(3, sx * 175 - sx * 0.8, sy * 275 + sy * 25, z, 11, -sx, 0, 0);
+      });
+    });
+  });
+  [-1, 1].forEach(function (sx) {
+    [-25, 25].forEach(function (y) { hole(7, sx * 225.8, y, 185, 6, sx, 0, 0); });
+  });
+  [[-65, -17], [-65, 17], [-30, -17], [-30, 17]].forEach(function (p) { hole(9, p[0], p[1], 159.3, 9, 0, 0, -1); });
+  [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(11, p[0], p[1], 340.8, 9, 0, 0, 1); });
+  [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(12, p[0], p[1], 339.4, 32, 0, 0, -1); });
+  [[-275, -275], [-275, 275], [275, -275], [275, 275]].forEach(function (p) { hole(13, p[0], p[1], 300.8, 8, 0, 0, 1); });
+
+  // ---- камера ----
+  var orbit = { az: 0.72, pol: 1.08, r: 2700 };
+  var target = new THREE.Vector3(0, 430, 0);
+  function applyCamera() {
+    orbit.pol = Math.min(1.45, Math.max(0.25, orbit.pol));
+    orbit.r = Math.min(5200, Math.max(450, orbit.r));
+    camera.position.set(
+      target.x + orbit.r * Math.sin(orbit.pol) * Math.sin(orbit.az),
+      target.y + orbit.r * Math.cos(orbit.pol),
+      target.z + orbit.r * Math.sin(orbit.pol) * Math.cos(orbit.az)
+    );
+    camera.lookAt(target);
+  }
+
+  function resize() {
+    var w = canvas.clientWidth || 600;
+    var h = canvas.clientHeight || 360;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas);
+  resize();
+
+  var dragging = false, lastX = 0, lastY = 0;
+  canvas.addEventListener('pointerdown', function (e) { dragging = true; lastX = e.clientX; lastY = e.clientY; canvas.setPointerCapture(e.pointerId); canvas.style.cursor = 'grabbing'; });
+  canvas.addEventListener('pointermove', function (e) {
+    if (dragging) {
+      orbit.az -= (e.clientX - lastX) * 0.005;
+      orbit.pol -= (e.clientY - lastY) * 0.004;
+      lastX = e.clientX; lastY = e.clientY;
+      applyCamera();
+    } else {
+      hover(e);
+    }
+  });
+  canvas.addEventListener('pointerup', function () { dragging = false; canvas.style.cursor = 'grab'; });
+  canvas.addEventListener('pointerleave', function () { dragging = false; elHover.textContent = ''; });
+  canvas.addEventListener('wheel', function (e) { e.preventDefault(); orbit.r *= 1 + (e.deltaY > 0 ? 0.08 : -0.08); applyCamera(); }, { passive: false });
+
+  var raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
+  function hover(e) {
+    var r = canvas.getBoundingClientRect();
+    pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    var visible = pickMeshes.filter(function (m) { var o = m; while (o) { if (o.visible === false) return false; o = o.parent; } return true; });
+    var hits = raycaster.intersectObjects(visible, false);
+    if (hits.length) {
+      var u = hits[0].object.userData;
+      elHover.textContent = (u.pickNum ? 'поз. ' + u.pickNum + ' · ' : '') + (u.pickName || '');
+    } else {
+      elHover.textContent = '';
+    }
+  }
+
+  var f = state.explode / 100;
+  function applyExplode() {
+    items.forEach(function (it) {
+      it.obj.position.set(it.base.x + it.ex.x * f, it.base.y + it.ex.y * f, it.base.z + it.ex.z * f);
+    });
+  }
+
+  function saveState() {
+    try { window.zcode.setWidgetState({ privateContent: { step: state.step, explode: state.explode } }).catch(function () {}); } catch (e) {}
+  }
+
+  function ease(t) { return 1 - Math.pow(1 - t, 3); }
+
+  function setStep(i, animate) {
+    state.step = Math.min(STEPS.length - 1, Math.max(0, i));
+    var s = STEPS[state.step];
+    elNum.textContent = 'Шаг ' + (state.step + 1) + ' из ' + STEPS.length;
+    elTitle.textContent = s.t;
+    elDesc.textContent = s.d;
+    elList.innerHTML = '';
+    DRILL[state.step].forEach(function (line) {
+      if (line === '—') return;
+      var li = document.createElement('li');
+      li.textContent = line;
+      elList.appendChild(li);
+    });
+    elBadges.innerHTML = '';
+    s.badges.forEach(function (t) {
+      var sp = document.createElement('span');
+      sp.className = 'viz-badge';
+      sp.textContent = t;
+      elBadges.appendChild(sp);
+    });
+    var pct = Math.round(((state.step + 1) / STEPS.length) * 100);
+    elBar.style.width = pct + '%';
+    elBarWrap.setAttribute('aria-valuenow', pct);
+    elPrev.disabled = state.step === 0;
+    elNext.disabled = state.step === STEPS.length - 1;
+    elNext.classList.toggle('btn-primary', state.step < STEPS.length - 1);
+    showLabels(state.step);
+    applyGhost(state.step);
+    items.forEach(function (it) {
+      var show = it.step <= state.step;
+      if (show && !it.obj.visible) {
+        it.obj.visible = true;
+        it.anim = (animate && !reduced) ? 0 : 1;
+      } else if (!show && it.obj.visible) {
+        it.obj.visible = false;
+      }
+    });
+    saveState();
+  }
+
+  elPrev.addEventListener('click', function () { stopTour(); setStep(state.step - 1, true); });
+  elNext.addEventListener('click', function () { stopTour(); setStep(state.step + 1, true); });
+  document.addEventListener('keydown', function (e) {
+    if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (e.key === 'ArrowRight') { stopTour(); setStep(state.step + 1, true); }
+    if (e.key === 'ArrowLeft') { stopTour(); setStep(state.step - 1, true); }
+  });
+
+  elSlider.addEventListener('input', function () {
+    state.explode = +elSlider.value;
+    elSliderVal.textContent = state.explode + '%';
+    f = state.explode / 100;
+    applyExplode();
+    saveState();
+  });
+  elSliderVal.textContent = state.explode + '%';
+  elSlider.value = state.explode;
+  f = state.explode / 100;
+  applyExplode();
+  applyCamera();
+
+  // ---- автообзор: камера сама облетает шаги, подписи показывают сверление ----
+  var elTour = document.getElementById('asm-tour');
+  var elLabels = document.getElementById('asm-labels');
+  var TOUR = [
+    { a: 0.8, p: 1.0, r: 2600, t: [0, 100, 0], hold: 4000 },
+    { a: -0.7, p: 1.15, r: 800, t: [-275, 150, 275], hold: 5000 },
+    { a: 0.7, p: 1.1, r: 2000, t: [0, 150, 0], hold: 4000 },
+    { a: -1.1, p: 1.2, r: 950, t: [-200, 215, 0], hold: 5500 },
+    { a: 1.1, p: 1.2, r: 950, t: [200, 215, 0], hold: 4800 },
+    { a: -0.9, p: 1.38, r: 650, t: [-150, 180, 0], hold: 5000 },
+    { a: 0.9, p: 1.38, r: 650, t: [150, 180, 0], hold: 4200 },
+    { a: 1.3, p: 1.25, r: 780, t: [215, 190, 0], hold: 6000 },
+    { a: 0.6, p: 1.05, r: 850, t: [-40, 235, 0], hold: 5500 },
+    { a: -0.8, p: 1.32, r: 600, t: [-47, 158, 0], hold: 6000 },
+    { a: 0.8, p: 0.9, r: 1300, t: [40, 310, 0], hold: 4500 },
+    { a: 0.8, p: 0.7, r: 620, t: [47, 342, 0], hold: 5500 },
+    { a: 0.85, p: 0.8, r: 1700, t: [0, 360, 0], hold: 4500 },
+    { a: 0.7, p: 1.25, r: 620, t: [277, 318, -277], hold: 5500 },
+    { a: 1.3, p: 1.05, r: 1000, t: [360, 240, -275], hold: 4000 },
+    { a: 0.75, p: 0.95, r: 2600, t: [0, 560, 0], hold: 4500 },
+    { a: 0.9, p: 0.9, r: 2900, t: [0, 660, 0], hold: 5000 }
+  ];
+  var ANNO = [
+    [['шаблон 550×550 по осям опор', -275, -275, 60]],
+    [['саморезы 5×50 ×4 · отверстия Ø5 уже в стакане', -326, -275, 85], ['ножка №1: задние — 300 мм над землёй', -275, -275, 295]],
+    [['передние ножки ниже на 1–2 см — наклон к летку', 275, -275, 290]],
+    [['сверло Ø11 насквозь: лежень 50 + ножка 100', -175, -250, 212], ['болты М10×160 · ключ 17 · ×4', -200, 300, 212]],
+    [['зеркально: Ø11 насквозь, болты М10×160', 175, 250, 212]],
+    [['полка-выступ: сюда ляжет поперечина', -142, 0, 157], ['вертикальная полка — к лежню, саморезы 6×40', -168, 30, 185]],
+    [['второй уголок — зеркально, полки вровень', 142, 0, 157]],
+    [['поперечина ложится на полки уголков', 0, 168, 0], ['глухарь 10×120 · сверло Ø6 на 70 мм', 225, 25, 185]],
+    [['стрелка датчика — вниз, по нагрузке', -47, 25, 250], ['кабель — от неподвижного конца', -80, -25, 245]],
+    [['пластина 60×60×4 под головки, снизу', -47, 0, 152], ['сверло Ø9 насквозь · 25 Н·м', -47, 30, 192]],
+    [['зазор траверса ↔ лежни — 3–4 см', 200, 300, 0]],
+    [['кузовные шайбы Ø30 · гнёзда Ø32 на 9 мм в фанере', 47, 0, 348]],
+    [['саморезы 6×60 ×8', 230, -35, 372], ['гнёзда Ø15–18 под головки М8', 65, 0, 372]],
+    [['сверло Ø8 на 70 мм в торец', 326, 326, 315], ['зазор до настила 3 мм', 284, 284, 348]],
+    [['корпус — на неподвижной ножке', 360, 275, 240]],
+    [['вес: настил → траверса → датчик → рама', 0, 0, 385]],
+    [['ремни параллельно траверсе · 15 см от оси', 0, 150, 720]]
+  ];
+  var tour = { on: false, i: 0, phase: 0, t0: 0, from: null, labelEls: [] };
+  var FLIGHT = reduced ? 10 : 1600;
+
+  // фокус-вставки: на шагах с уголками и пластинами остальное притушивается
+  var FOCUS = {
+    5: { keep: /(уголок|6×40)/i, ctx: /(лежень)/i },
+    6: { keep: /(уголок|6×40)/i, ctx: /(лежень)/i },
+    7: { keep: /(поперечин|глухарь|уголок|6×40)/i, ctx: /(лежень)/i },
+    9: { keep: /(ластина|м8 через|датчик|еподвижный)/i, ctx: /(поперечин)/i },
+    11: { keep: /(шайба|м8 через|раверса|рузовой)/i, ctx: /(датчик)/i }
+  };
+  function applyGhost(i) {
+    var Fc = FOCUS[i];
+    items.forEach(function (it) {
+      it.opT = !Fc ? 1 : Fc.keep.test(it.name) ? 1 : (Fc.ctx && Fc.ctx.test(it.name)) ? 0.4 : 0.1;
+    });
+  }
+
+  function clearLabels() { elLabels.innerHTML = ''; tour.labelEls = []; tour.note = null; }
+  function showLabels(i) {
+    clearLabels();
+    tour.note = document.createElement('div');
+    tour.note.className = 'asm-note';
+    elLabels.appendChild(tour.note);
+    (ANNO[i] || []).forEach(function (a, k) {
+      var line = document.createElement('div');
+      var b = document.createElement('b');
+      b.textContent = String(k + 1);
+      var span = document.createElement('span');
+      span.textContent = a[0];
+      line.appendChild(b); line.appendChild(span);
+      tour.note.appendChild(line);
+      var dot = document.createElement('div');
+      dot.className = 'asm-dot';
+      dot.textContent = String(k + 1);
+      elLabels.appendChild(dot);
+      tour.labelEls.push({ el: dot, v: toThree(a[1], a[2], a[3]) });
+    });
+  }
+  function placeLabels() {
+    var w = canvas.clientWidth, h = canvas.clientHeight;
+    tour.labelEls.forEach(function (L) {
+      var v = L.v.clone().project(camera);
+      var ok = v.z < 1 && v.x > -0.95 && v.x < 0.95 && v.y > -0.92 && v.y < 0.92;
+      L.el.style.display = ok ? '' : 'none';
+      if (ok) {
+        L.el.style.left = Math.round((v.x + 1) / 2 * w) + 'px';
+        L.el.style.top = Math.round((1 - v.y) / 2 * h) + 'px';
+      }
+    });
+  }
+  function stopTour() {
+    if (!tour.on) return;
+    tour.on = false;
+    elTour.textContent = '▶ Обзор';
+  }
+  elTour.addEventListener('click', function () {
+    if (tour.on) { stopTour(); return; }
+    tour.on = true; tour.i = 0; tour.phase = 0; tour.t0 = performance.now();
+    tour.from = { a: orbit.az, p: orbit.pol, r: orbit.r, t: target.clone() };
+    elTour.textContent = '⏸ Стоп';
+    setStep(0, true);
+  });
+
+  // рендер текущего кадра в 3× разрешении и скачивание PNG
+  document.getElementById('asm-png').addEventListener('click', function () {
+    var w = canvas.clientWidth, h = canvas.clientHeight;
+    renderer.setPixelRatio(3);
+    renderer.setSize(w, h, false);
+    renderer.render(scene, camera);
+    var url = canvas.toDataURL('image/png');
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(w, h, false);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'сборка-шаг-' + (state.step + 1) + '.png';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+  canvas.addEventListener('pointerdown', function () { if (tour.on) stopTour(); });
+
+  var tPrev = performance.now();
+  function loop(t) {
+    var dt = Math.min(0.05, (t - tPrev) / 1000); tPrev = t;
+    if (tour.on) {
+      var T = TOUR[tour.i], el = performance.now() - tour.t0;
+      if (tour.phase === 0) {
+        var k = Math.min(1, el / FLIGHT), ke = ease(k);
+        orbit.az = tour.from.a + (T.a - tour.from.a) * ke;
+        orbit.pol = tour.from.p + (T.p - tour.from.p) * ke;
+        orbit.r = tour.from.r + (T.r - tour.from.r) * ke;
+        target.set(tour.from.t.x + (T.t[0] - tour.from.t.x) * ke,
+                   tour.from.t.y + (T.t[1] - tour.from.t.y) * ke,
+                   tour.from.t.z + (T.t[2] - tour.from.t.z) * ke);
+        applyCamera();
+        if (k >= 1) {
+          tour.phase = 1; tour.t0 = performance.now();
+          setStep(tour.i, true);
+        }
+      } else if (el > T.hold) {
+        tour.i++;
+        if (tour.i >= TOUR.length) stopTour();
+        else { tour.phase = 0; tour.t0 = performance.now(); tour.from = { a: orbit.az, p: orbit.pol, r: orbit.r, t: target.clone() }; }
+      }
+    }
+    if (tour.labelEls.length) placeLabels();
+    items.forEach(function (it) {
+      if (!it.obj.visible) { if (it.nutMesh) it.nutMesh.visible = false; return; }
+      if (it.anim < 1) {
+        it.anim = Math.min(1, it.anim + dt / 2.2);
+        var p = ease(it.anim);
+        if (it.kind === 'screw') {
+          var bp = Math.min(1, p / 0.6);   // фаза 1: болт заходит снаружи и вкручивается
+          var off = (1 - ease(bp)) * 130;
+          it.obj.position.set(it.base.x + it.ex.x * f - it.axis.x * off, it.base.y + it.ex.y * f - it.axis.y * off, it.base.z + it.ex.z * f - it.axis.z * off);
+          if (it.spin) it.spin.rotation.y = ease(bp) * 12;
+          if (it.nutMesh) {                // фаза 2: гайка накручивается на хвост болта
+            var np = Math.max(0, Math.min(1, (p - 0.6) / 0.4));
+            it.nutMesh.visible = np > 0;
+            it.nutMesh.position.y = it.nutFy + (1 - ease(np)) * 55;
+            it.nutMesh.rotation.y = ease(np) * 14;
+          }
+        } else if (it.kind === 'slide') {
+          var d2 = (1 - p) * 60;
+          it.obj.position.set(it.base.x + it.ex.x * f + it.axis.x * d2, it.base.y + it.ex.y * f + it.axis.y * d2, it.base.z + it.ex.z * f + it.axis.z * d2);
+        }
+      }
+      if (it.nutMesh && it.anim >= 1) { it.nutMesh.visible = true; it.nutMesh.position.y = it.nutFy; }
+      if (Math.abs(it.op - it.opT) > 0.002) it.op += (it.opT - it.op) * Math.min(1, dt * 5);
+      var o = (it.kind === 'fade' && it.anim < 1 ? ease(it.anim) : 1) * it.op;
+      if (Math.abs(o - it.lastO) > 0.004) {
+        it.lastO = o;
+        it.mats.forEach(function (m) { m.transparent = o < 0.995; m.opacity = o; });
+      }
+    });
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  }
+  setStep(state.step, false);   // после определения tour/FOCUS: setStep на них опирается
+  requestAnimationFrame(loop);
+})();
+</script>
+</body></html>
