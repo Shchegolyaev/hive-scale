@@ -328,6 +328,7 @@
     return toThree((cx / hl) * 360 * hF, (cy / hl) * 360 * hF, 140 + 500 * Math.max(0, (cz - 160) / 1030));
   }
 
+  var hiveCount = 0, strapCount = 0;
   DATA.boxes.forEach(function (b) {
     if (b.name.indexOf('Стоп-болт') === 0) return;   // стоп-болты ставятся анимированным крепежом ниже
     var stepIdx = -1;
@@ -357,7 +358,11 @@
     var cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2, cz = (b.z0 + b.z1) / 2;
     mesh.position.copy(toThree(cx, cy, cz));
     mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), edgeMat));
-    register({ obj: mesh, name: b.name, num: b.num, step: stepIdx, base: toThree(cx, cy, cz), ex: defaultEx(cx, cy, cz), kind: 'fade', anim: 1 });
+    var kind = b.name.indexOf('Забивная опора') === 0 ? 'fade' : 'drop';
+    var delay0 = 0;
+    if (b.group === 'hive') delay0 = 0.35 * hiveCount++;
+    if (b.group === 'strap') delay0 = 0.2 * strapCount++;
+    register({ obj: mesh, name: b.name, num: b.num, step: stepIdx, base: toThree(cx, cy, cz), ex: defaultEx(cx, cy, cz), kind: kind, anim: 1, delay0: delay0, dropH: 320 });
   });
   window.__items = items;   // отладка: доступ к материалам из консоли
 
@@ -438,7 +443,7 @@
         washer.position.y = 160; sp.add(washer);
         addNut(sp, 163.5, MAT_ZINC);
         addFastener({ name: 'Болт М10×160 насквозь: лежень + ножка · сверло Ø11 · ключ 17', num: 2, step: sx < 0 ? 5 : 6 },
-          sp, { x: sx, y: 0, z: 0 }, { x: sx * 166, y: ly + sy * 25, z: z }, dirThree(sx, 0, 0).multiplyScalar(320));
+          sp, { x: -sx, y: 0, z: 0 }, { x: sx * 166, y: ly + sy * 25, z: z }, dirThree(-sx, 0, 0).multiplyScalar(320));
       });
     });
   });
@@ -487,15 +492,16 @@
   function plate(name, step, cx, cy, cz) {
     var m = new THREE.Mesh(new THREE.BoxGeometry(60, 4, 60), MAT_PLATE);
     m.position.copy(toThree(cx, cy, cz));
-    register({ obj: m, name: name, num: 4, step: step, base: toThree(cx, cy, cz), ex: toThree(0, 0, cz > 300 ? 200 : 60), kind: 'slide', axis: dirThree(0, 0, -1), anim: 1, edges: true });
+    register({ obj: m, name: name, num: 4, step: step, base: toThree(cx, cy, cz), ex: toThree(0, 0, cz > 300 ? 200 : 60), kind: 'drop', axis: dirThree(0, 0, -1), anim: 1, edges: true, delay0: 0.4, dropH: 240 });
   }
   plate('Пластина 60×60×4 — только снизу, под поперечиной (сверху ей мешал бы настил)', 13, -47, 0, 158, false);
 
   // сверху вместо пластины — кузовные шайбы Ø30: не мешают настилу, прячутся в гнёзда Ø32
+  var washCount = 0;
   [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) {
     var w = new THREE.Mesh(new THREE.CylinderGeometry(15, 15, 3, 20), MAT_PLATE);
     w.position.copy(toThree(p[0], p[1], 341.5));
-    register({ obj: w, name: 'Кузовная шайба М8 Ø30 · в фанере под ней гнездо Ø32 на 9 мм', num: 4, step: 15, base: w.position.clone(), ex: toThree(0, 0, 200), kind: 'fade', anim: 1 });
+    register({ obj: w, name: 'Кузовная шайба М8 Ø30 · в фанере под ней гнездо Ø32 на 9 мм', num: 4, step: 15, base: w.position.clone(), ex: toThree(0, 0, 200), kind: 'drop', anim: 1, delay0: 0.3 * washCount++, dropH: 260 });
   });
 
   [[-65, -17], [-65, 17], [-30, -17], [-30, 17]].forEach(function (p) {
@@ -707,8 +713,8 @@
     { a: -2.4, p: 1.15, r: 800, t: [-275, 150, -275], hold: 6000 },
     { a: 0.8, p: 1.15, r: 800, t: [275, 150, 275], hold: 7000 },
     { a: 2.4, p: 1.15, r: 800, t: [275, 150, -275], hold: 6000 },
-    { a: -1.1, p: 1.2, r: 1000, t: [-200, 215, 0], hold: 9500 },
-    { a: 1.1, p: 1.2, r: 1000, t: [200, 215, 0], hold: 9500 },
+    { a: 1.1, p: 1.2, r: 1000, t: [-200, 215, 0], hold: 9500 },
+    { a: -1.1, p: 1.2, r: 1000, t: [200, 215, 0], hold: 9500 },
     { a: 0.9, p: 1.38, r: 650, t: [-150, 180, 0], hold: 8000 },
     { a: -0.9, p: 1.38, r: 650, t: [150, 180, 0], hold: 8000 },
     { a: 1.3, p: 1.25, r: 900, t: [150, 190, 0], hold: 5000 },
@@ -848,11 +854,14 @@
       if (!it.obj.visible) { if (it.nutMesh) it.nutMesh.visible = false; return; }
       if (it.delay > 0) { it.delay -= dt; }
       else if (it.anim < 1) {
-        it.anim = Math.min(1, it.anim + dt / (it.kind === 'drill' ? 0.5 : 2.2));
+        it.anim = Math.min(1, it.anim + dt / (it.kind === 'drill' ? 0.5 : it.kind === 'drop' ? 1.1 : 2.2));
         var p = ease(it.anim);
         if (it.kind === 'drill') {           // фаза 0: высверливаем отверстие
           var sc = 1.7 - 0.7 * p;
           it.obj.scale.set(sc, sc, sc);
+        } else if (it.kind === 'drop') {     // деталь опускается сверху на своё место
+          var dh = it.dropH || 300;
+          it.obj.position.set(it.base.x + it.ex.x * f, it.base.y + it.ex.y * f + (1 - p) * dh, it.base.z + it.ex.z * f);
         } else if (it.kind === 'screw') {
           var bp = Math.min(1, p / 0.6);   // фаза 1: болт заходит снаружи и вкручивается
           var off = (1 - ease(bp)) * (it.off || 130);
