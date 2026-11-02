@@ -152,14 +152,14 @@
     ['То же на трёх остальных ножках', 'Передние ножки — ниже задних на 1–2 см (наклон к летку)'],
     ['Сверло Ø11 насквозь: лежень (50 мм) + ножка (100 мм)', 'Болт М10×160, две шайбы и гайка — ключ 17, по 2 на ножку'],
     ['Зеркально: Ø11 насквозь, болты М10×160 — ещё 4 шт.'],
-    ['Сверлить не нужно', 'Саморез 6×40 — горизонтально, вертикальная полка к внутренней грани лежня, ~3 шт.', 'Горизонтальная полка — вровень с низом лежней: на неё ляжет поперечина'],
-    ['Зеркально: уголок 70×70 к правому лежню, саморезы 6×40'],
-    ['Сверло Ø6 через лежень в торец поперечины, глубина ~70 мм', 'Глухарь 10×120 с шайбой — по 2 на торец', 'Верхние саморезы полок (уже в поперечину) — 6×40, ~3 шт.'],
+    ['Сверло Ø4 в лежень под саморезы, затем уголок 70×70', 'Саморез 6×40 — горизонтально, вертикальная полка к внутренней грани лежня', 'Горизонтальная полка — вровень с низом лежней: на неё ляжет поперечина'],
+    ['Зеркально: сверло Ø4 в лежень, уголок 70×70, саморезы 6×40'],
+    ['Сверло Ø6 через лежень в торец поперечины, глубина ~70 мм', 'Глухарь 10×120 с шайбой — по 2 на торец', 'Сверло Ø4 в поперечину под саморезы полок — 6×40, ~3 шт.'],
     ['Сверло Ø9 насквозь поперечины по отверстиям датчика', 'Датчик — стрелкой вниз, кабелем к неподвижному концу'],
     ['Через пластину 60×60×4 (отверстие Ø9)', 'Болт М8 полная резьба 80–90 мм, момент 25 Н·м, подтянуть через месяц'],
     ['Зазор траверса ↔ лежни — не меньше 3–4 см'],
     ['Сверло Ø9 насквозь траверсы', 'Болты М8 через кузовные шайбы Ø30 (пластина сверху мешала бы настилу), 25 Н·м'],
-    ['Гнёзда Ø32 на ~9 мм (перовое/Форстнер) над кузовными шайбами с головками', 'Саморез 6×60 потайной — 8 шт., не попади в болты М8'],
+    ['Гнёзда Ø32 на ~9 мм (перовое/Форстнер) над кузовными шайбами с головками', 'Сверло Ø4 + зенковка под саморезы 6×60 — 8 шт., не попади в болты М8'],
     ['Сверло Ø8 в торец ножки, ~70 мм, не насквозь', 'Шпилька М10×100 + 2 гайки: зазор до настила 3 мм, законтрить'],
     ['—', 'Крепёж корпуса — по его закладным'],
     ['—', 'Улей просто стоит на настиле, ничего не крепится'],
@@ -279,6 +279,7 @@
 
   function register(o) {
     o.obj.visible = false;
+    o.delay = o.delay0 || 0;
     o.op = 1; o.opT = 1; o.lastO = -1;
     o.mats = [];
     o.obj.traverse(function (ch) {
@@ -344,13 +345,13 @@
   var MAT_PLATE = new THREE.MeshStandardMaterial({ color: new THREE.Color('#4A545E').convertSRGBToLinear(), roughness: 0.4, metalness: 0.45 });
   var HOLE_MAT = new THREE.MeshBasicMaterial({ color: 0x2a231b });
 
-  // тёмный кружок = отверстие, которое сверлим заранее (диаметр = сверло)
+  // тёмный кружок = отверстие: «высверливается» с анимацией до установки крепежа
   function hole(step, x, y, z, dia, nx, ny, nz) {
     var m = new THREE.Mesh(new THREE.CircleGeometry(dia / 2, 24), HOLE_MAT);
     var p = toThree(x, y, z);
     m.position.copy(p);
     m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), dirThree(nx, ny, nz));
-    register({ obj: m, name: 'Отверстие Ø' + dia + (dia >= 32 ? ' — гнездо под шайбу с головкой' : ' — сверлить заранее'), num: null, step: step, base: p.clone(), ex: toThree(nx * 50, ny * 50, nz * 50), kind: 'fade', anim: 1, noShadow: true });
+    register({ obj: m, name: 'Отверстие Ø' + dia + (dia >= 32 ? ' — гнездо под шайбу с головкой' : ' — сверлить заранее'), num: null, step: step, base: p.clone(), ex: toThree(nx * 50, ny * 50, nz * 50), kind: 'drill', anim: 1, delay: 0.7, noShadow: true });
   }
 
   // болт: локальная ось Y = ось болта, головка у y=0, стержень в +Y
@@ -376,7 +377,7 @@
     g.add(spinner);
     var nut = spinner.userData.nut;
     if (nut) { nut.position.y = nut.userData.fy + 55; g.add(nut); }
-    register({ obj: g, name: o.name, num: o.num, step: o.step, base: g.position.clone(), ex: exM, kind: o.kind || 'screw', axis: dirThree(axisM.x, axisM.y, axisM.z), spin: spinner, anim: 1, nutMesh: nut || null, nutFy: nut ? nut.userData.fy : 0, off: o.off || 130 });
+    register({ obj: g, name: o.name, num: o.num, step: o.step, base: g.position.clone(), ex: exM, kind: o.kind || 'screw', axis: dirThree(axisM.x, axisM.y, axisM.z), spin: spinner, anim: 1, nutMesh: nut || null, nutFy: nut ? nut.userData.fy : 0, off: o.off || 130, delay0: o.delay !== undefined ? o.delay : 1.25 });
   }
 
   // 1) саморезы 5×50 в стаканах (шаг 2: ножки): через стенки стакана в брус
@@ -387,8 +388,9 @@
         [{ x: sx * 330.5, ax: -sx }, { x: sx * 219.5, ax: sx }].forEach(function (d) {
           var sp = new THREE.Group();
           var sh = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 50, 8), MAT_SCREW); sh.position.y = 25;
+          var tip = new THREE.Mesh(new THREE.ConeGeometry(2.5, 6, 8), MAT_SCREW); tip.position.y = 53;
           var hd = new THREE.Mesh(new THREE.CylinderGeometry(6.5, 6.5, 3.5, 10), MAT_SCREW); hd.position.y = 1.75;
-          sp.add(hd); sp.add(sh);
+          sp.add(hd); sp.add(sh); sp.add(tip);
           addFastener({ name: 'Саморез 5×50: стакан → ножка (отверстие Ø5 в стакане уже есть)', num: 1, step: (sx < 0 && sy < 0) ? 1 : 2 },
             sp, { x: d.ax, y: 0, z: 0 }, { x: d.x, y: ly, z: z }, defaultEx(sx * 275, ly, z));
         });
@@ -417,6 +419,8 @@
   [-1, 1].forEach(function (sx) {
     [-25, 25].forEach(function (y) {
       var sp = makeBolt(120, 5, 8, 6.5, MAT_DARK);
+      var gtip = new THREE.Mesh(new THREE.ConeGeometry(5, 9, 8), MAT_DARK); gtip.position.y = 124.5;
+      sp.add(gtip);
       var washer = new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 2, 12), MAT_ZINC);
       washer.position.y = 7.5; sp.add(washer);
       addFastener({ name: 'Глухарь 10×120: лежень → торец поперечины · сверло Ø6 на ~70 мм', num: 3, step: 7 },
@@ -435,18 +439,20 @@
     [-30, 0, 30].forEach(function (yy) {
       var s1 = new THREE.Group();
       var a = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 8), MAT_SCREW); a.position.y = 20;
+      var at = new THREE.Mesh(new THREE.ConeGeometry(2, 5, 8), MAT_SCREW); at.position.y = 42.5;
       var b = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_SCREW); b.position.y = 1.5;
-      s1.add(a); s1.add(b);
+      s1.add(a); s1.add(at); s1.add(b);
       addFastener({ name: 'Саморез 6×40: уголок → поперечина (крутим, когда доска уже лежит на полке)', num: 3, step: 7 },
         s1, { x: 0, y: 0, z: 1 }, { x: sx * 118, y: yy, z: 160 }, defaultEx(sx * 118, yy, 155));
       var s2 = new THREE.Group();
       var a2 = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 8), MAT_SCREW); a2.position.y = 20;
+      var a2t = new THREE.Mesh(new THREE.ConeGeometry(2, 5, 8), MAT_SCREW); a2t.position.y = 42.5;
       var b2 = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_SCREW); b2.position.y = 1.5;
-      s2.add(a2); s2.add(b2);
+      s2.add(a2); s2.add(a2t); s2.add(b2);
       addFastener({ name: 'Саморез 6×40: вертикальная полка уголка → лежень (до поперечины)', num: 3, step: sx < 0 ? 5 : 6 },
         s2, { x: sx, y: 0, z: 0 }, { x: sx * 172, y: yy, z: 185 }, defaultEx(sx * 190, yy, 185));
     });
-    register({ obj: g, name: 'Уголок усиленный 70×70: полка-выступ под поперечину + к лежню', num: 3, step: sx < 0 ? 5 : 6, base: new THREE.Vector3(0, 0, 0), ex: dirThree(sx, 0, 0).multiplyScalar(340), kind: 'slide', axis: dirThree(sx, 0, 0), anim: 1, edges: true });
+    register({ obj: g, name: 'Уголок усиленный 70×70: полка-выступ под поперечину + к лежню', num: 3, step: sx < 0 ? 5 : 6, base: new THREE.Vector3(0, 0, 0), ex: dirThree(sx, 0, 0).multiplyScalar(340), kind: 'slide', axis: dirThree(sx, 0, 0), slideSign: -1, anim: 1, edges: true });
   });
 
   // 5) пластины 60×60×4 и болты М8 (шаг 5 — низ, шаг 6 — верх)
@@ -483,8 +489,9 @@
   [[-230, -35], [-230, 35], [-100, -35], [-100, 35], [100, -35], [100, 35], [230, -35], [230, 35]].forEach(function (p) {
     var sp = new THREE.Group();
     var sh = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 60, 8), MAT_ZINC); sh.position.y = 30;
+    var stp = new THREE.Mesh(new THREE.ConeGeometry(3, 6, 8), MAT_ZINC); stp.position.y = 63;
     var hd = new THREE.Mesh(new THREE.CylinderGeometry(5.5, 5.5, 3, 12), MAT_ZINC); hd.position.y = 1.5;
-    sp.add(hd); sp.add(sh);
+    sp.add(hd); sp.add(sh); sp.add(stp);
     addFastener({ name: 'Саморез 6×60 потайной: настил → траверса', num: 7, step: 12 },
       sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 370 }, toThree(p[0] * 0.3, p[1] * 0.3, 420));
   });
@@ -504,6 +511,17 @@
   [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(11, p[0], p[1], 340.8, 9, 0, 0, 1); });
   [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(12, p[0], p[1], 339.4, 32, 0, 0, -1); });
   [[-275, -275], [-275, 275], [275, -275], [275, 275]].forEach(function (p) { hole(13, p[0], p[1], 300.8, 8, 0, 0, 1); });
+
+  // пилотные отверстия Ø4 под саморезы
+  [-1, 1].forEach(function (sx) {
+    [-30, 0, 30].forEach(function (yy) { hole(sx < 0 ? 5 : 6, sx * 175 - sx * 0.8, yy, 185, 4, -sx, 0, 0); });
+  });
+  [-1, 1].forEach(function (sx) {
+    [-30, 0, 30].forEach(function (yy) { hole(7, sx * 118, yy, 159.3, 4, 0, 0, -1); });
+  });
+  [[-230, -35], [-230, 35], [-100, -35], [-100, 35], [100, -35], [100, 35], [230, -35], [230, 35]].forEach(function (p) {
+    hole(12, p[0], p[1], 367.8, 4, 0, 0, 1);
+  });
 
   // 9) стоп-шпильки: вкручиваются в торцы ножек, следом гайка + контргайка (зазор до настила 3 мм)
   [[-275, -275], [-275, 275], [275, -275], [275, 275]].forEach(function (p) {
@@ -622,7 +640,9 @@
       var show = it.step <= state.step;
       if (show && !it.obj.visible) {
         it.obj.visible = true;
-        it.anim = (animate && !reduced) ? 0 : 1;
+        var fresh = animate && !reduced;
+        it.anim = fresh ? 0 : 1;
+        it.delay = fresh ? (it.delay0 || 0) : 0;
       } else if (!show && it.obj.visible) {
         it.obj.visible = false;
       }
@@ -660,8 +680,8 @@
     { a: 0.7, p: 1.1, r: 2000, t: [0, 150, 0], hold: 4000 },
     { a: -1.1, p: 1.2, r: 950, t: [-200, 215, 0], hold: 5500 },
     { a: 1.1, p: 1.2, r: 950, t: [200, 215, 0], hold: 4800 },
-    { a: -0.9, p: 1.38, r: 650, t: [-150, 180, 0], hold: 5000 },
-    { a: 0.9, p: 1.38, r: 650, t: [150, 180, 0], hold: 4200 },
+    { a: 0.9, p: 1.38, r: 650, t: [-150, 180, 0], hold: 5000 },
+    { a: -0.9, p: 1.38, r: 650, t: [150, 180, 0], hold: 4500 },
     { a: 1.3, p: 1.25, r: 780, t: [215, 190, 0], hold: 6000 },
     { a: 0.6, p: 1.05, r: 850, t: [-40, 235, 0], hold: 5500 },
     { a: -0.8, p: 1.32, r: 600, t: [-47, 158, 0], hold: 6000 },
@@ -801,10 +821,14 @@
     if (tour.labelEls.length) placeLabels();
     items.forEach(function (it) {
       if (!it.obj.visible) { if (it.nutMesh) it.nutMesh.visible = false; return; }
-      if (it.anim < 1) {
-        it.anim = Math.min(1, it.anim + dt / 2.2);
+      if (it.delay > 0) { it.delay -= dt; }
+      else if (it.anim < 1) {
+        it.anim = Math.min(1, it.anim + dt / (it.kind === 'drill' ? 0.5 : 2.2));
         var p = ease(it.anim);
-        if (it.kind === 'screw') {
+        if (it.kind === 'drill') {           // фаза 0: высверливаем отверстие
+          var sc = 1.7 - 0.7 * p;
+          it.obj.scale.set(sc, sc, sc);
+        } else if (it.kind === 'screw') {
           var bp = Math.min(1, p / 0.6);   // фаза 1: болт заходит снаружи и вкручивается
           var off = (1 - ease(bp)) * (it.off || 130);
           it.obj.position.set(it.base.x + it.ex.x * f - it.axis.x * off, it.base.y + it.ex.y * f - it.axis.y * off, it.base.z + it.ex.z * f - it.axis.z * off);
@@ -816,13 +840,13 @@
             it.nutMesh.rotation.y = ease(np) * 14;
           }
         } else if (it.kind === 'slide') {
-          var d2 = (1 - p) * 60;
+          var d2 = (1 - p) * 60 * (it.slideSign || 1);
           it.obj.position.set(it.base.x + it.ex.x * f + it.axis.x * d2, it.base.y + it.ex.y * f + it.axis.y * d2, it.base.z + it.ex.z * f + it.axis.z * d2);
         }
       }
       if (it.nutMesh && it.anim >= 1) { it.nutMesh.visible = true; it.nutMesh.position.y = it.nutFy; }
       if (Math.abs(it.op - it.opT) > 0.002) it.op += (it.opT - it.op) * Math.min(1, dt * 5);
-      var o = (it.kind === 'fade' && it.anim < 1 ? ease(it.anim) : 1) * it.op;
+      var o = ((it.kind === 'fade' || it.kind === 'drill') && it.anim < 1 ? ease(it.anim) : 1) * it.op;
       if (Math.abs(o - it.lastO) > 0.004) {
         it.lastO = o;
         it.mats.forEach(function (m) { m.transparent = o < 0.995; m.opacity = o; });
