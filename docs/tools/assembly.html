@@ -370,7 +370,7 @@
   var MAT_ZINC = new THREE.MeshStandardMaterial({ color: new THREE.Color('#D8DEE4').convertSRGBToLinear(), roughness: 0.22, metalness: 0.85 });
   var MAT_SCREW = new THREE.MeshStandardMaterial({ color: new THREE.Color('#35302a').convertSRGBToLinear(), roughness: 0.5, metalness: 0.55 });
   var MAT_DARK = new THREE.MeshStandardMaterial({ color: new THREE.Color('#3A424A').convertSRGBToLinear(), roughness: 0.4, metalness: 0.4 });
-  var MAT_ANG = new THREE.MeshStandardMaterial({ color: new THREE.Color('#5B6670').convertSRGBToLinear(), roughness: 0.45, metalness: 0.4 });
+  var MAT_ANG = new THREE.MeshStandardMaterial({ color: new THREE.Color('#A2ABB4').convertSRGBToLinear(), roughness: 0.38, metalness: 0.55 });
   var MAT_PLATE = new THREE.MeshStandardMaterial({ color: new THREE.Color('#4A545E').convertSRGBToLinear(), roughness: 0.4, metalness: 0.45 });
   var HOLE_MAT = new THREE.MeshBasicMaterial({ color: 0x2a231b });
 
@@ -443,7 +443,7 @@
         washer.position.y = 160; sp.add(washer);
         addNut(sp, 163.5, MAT_ZINC);
         addFastener({ name: 'Болт М10×160 насквозь: лежень + ножка · сверло Ø11 · ключ 17', num: 2, step: sx < 0 ? 5 : 6 },
-          sp, { x: -sx, y: 0, z: 0 }, { x: sx * 166, y: ly + sy * 25, z: z }, dirThree(-sx, 0, 0).multiplyScalar(320));
+          sp, { x: sx, y: 0, z: 0 }, { x: sx * 166, y: ly + sy * 25, z: z }, dirThree(sx, 0, 0).multiplyScalar(320));
       });
     });
   });
@@ -471,21 +471,21 @@
     g.add(v); g.add(h);
     [-30, 0, 30].forEach(function (yy) {
       var s1 = new THREE.Group();
-      var a = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 8), MAT_SCREW); a.position.y = 20;
-      var at = new THREE.Mesh(new THREE.ConeGeometry(2, 5, 8), MAT_SCREW); at.position.y = 42.5;
-      var b = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_SCREW); b.position.y = 1.5;
+      var a = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 40, 8), MAT_SCREW); a.position.y = 20;
+      var at = new THREE.Mesh(new THREE.ConeGeometry(2.4, 6, 8), MAT_SCREW); at.position.y = 43;
+      var b = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 3.5, 10), MAT_SCREW); b.position.y = 1.75;
       s1.add(a); s1.add(at); s1.add(b);
       addFastener({ name: 'Саморез 6×40: уголок → поперечина (крутим, когда доска уже лежит на полке)', num: 3, step: 11 },
-        s1, { x: 0, y: 0, z: 1 }, { x: sx * 118, y: yy, z: 160 }, defaultEx(sx * 118, yy, 155));
+        s1, { x: 0, y: 0, z: 1 }, { x: sx * 118, y: yy, z: 152.5 }, defaultEx(sx * 118, yy, 155));
       var s2 = new THREE.Group();
-      var a2 = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 8), MAT_SCREW); a2.position.y = 20;
-      var a2t = new THREE.Mesh(new THREE.ConeGeometry(2, 5, 8), MAT_SCREW); a2t.position.y = 42.5;
-      var b2 = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_SCREW); b2.position.y = 1.5;
+      var a2 = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 40, 8), MAT_SCREW); a2.position.y = 20;
+      var a2t = new THREE.Mesh(new THREE.ConeGeometry(2.4, 6, 8), MAT_SCREW); a2t.position.y = 43;
+      var b2 = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 3.5, 10), MAT_SCREW); b2.position.y = 1.75;
       s2.add(a2); s2.add(a2t); s2.add(b2);
       addFastener({ name: 'Саморез 6×40: вертикальная полка уголка → лежень (до поперечины)', num: 3, step: sx < 0 ? 7 : 8 },
-        s2, { x: sx, y: 0, z: 0 }, { x: sx * 172, y: yy, z: 185 }, defaultEx(sx * 190, yy, 185));
+        s2, { x: sx, y: 0, z: 0 }, { x: sx * 166.5, y: yy, z: 185 }, defaultEx(sx * 190, yy, 185));
     });
-    register({ obj: g, name: 'Уголок усиленный 70×70: полка-выступ под поперечину + к лежню', num: 3, step: sx < 0 ? 7 : 8, base: new THREE.Vector3(0, 0, 0), ex: dirThree(sx, 0, 0).multiplyScalar(340), kind: 'slide', axis: dirThree(sx, 0, 0), slideSign: -1, anim: 1, edges: true });
+    register({ obj: g, name: 'Уголок усиленный 70×70: полка-выступ под поперечину + к лежню', num: 3, step: sx < 0 ? 7 : 8, base: new THREE.Vector3(0, 0, 0), ex: dirThree(sx, 0, 0).multiplyScalar(340), kind: 'slide', axis: dirThree(sx, 0, 0), slideSign: -1, anim: 1, edges: true, delay0: 1.1 });
   });
 
   // 5) пластины 60×60×4 и болты М8 (шаг 5 — низ, шаг 6 — верх)
@@ -543,7 +543,7 @@
   });
   [[-65, -17], [-65, 17], [-30, -17], [-30, 17]].forEach(function (p) { hole(13, p[0], p[1], 159.3, 9, 0, 0, -1); });
   [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(15, p[0], p[1], 340.8, 9, 0, 0, 1); });
-  [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(17, p[0], p[1], 339.4, 32, 0, 0, -1); });
+  [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(17, p[0], p[1], 368.2, 32, 0, 0, 1); });
   [[-275, -275], [-275, 275], [275, -275], [275, 275]].forEach(function (p) { hole(19, p[0], p[1], 300.8, 8, 0, 0, 1); });
 
   // пилотные отверстия Ø4 под саморезы
@@ -551,7 +551,7 @@
     [-30, 0, 30].forEach(function (yy) { hole(sx < 0 ? 7 : 8, sx * 175 - sx * 0.8, yy, 185, 4, -sx, 0, 0); });
   });
   [-1, 1].forEach(function (sx) {
-    [-30, 0, 30].forEach(function (yy) { hole(11, sx * 118, yy, 159.3, 4, 0, 0, -1); });
+    [-30, 0, 30].forEach(function (yy) { hole(11, sx * 118, yy, 155.3, 4, 0, 0, -1); });
   });
   [[-230, -35], [-230, 35], [-100, -35], [-100, 35], [100, -35], [100, 35], [230, -35], [230, 35]].forEach(function (p) {
     hole(18, p[0], p[1], 367.8, 4, 0, 0, 1);
@@ -629,6 +629,10 @@
     }
   }
 
+  var camFly = null;
+  function flyTo(T) {
+    camFly = { from: { a: orbit.az, p: orbit.pol, r: orbit.r, t: target.clone() }, to: T, t0: performance.now(), dur: reduced ? 10 : 1200 };
+  }
   var f = state.explode / 100;
   function applyExplode() {
     items.forEach(function (it) {
@@ -669,6 +673,7 @@
     elNext.disabled = state.step === STEPS.length - 1;
     elNext.classList.toggle('btn-primary', state.step < STEPS.length - 1);
     showLabels(state.step);
+    if (!tour.on) flyTo(TOUR[state.step]);
     items.forEach(function (it) {
       var show = it.step <= state.step;
       if (show && !it.obj.visible) {
@@ -715,13 +720,13 @@
     { a: 2.4, p: 1.15, r: 800, t: [275, 150, -275], hold: 6000 },
     { a: 1.1, p: 1.2, r: 1000, t: [-200, 215, 0], hold: 9500 },
     { a: -1.1, p: 1.2, r: 1000, t: [200, 215, 0], hold: 9500 },
-    { a: 0.9, p: 1.38, r: 650, t: [-150, 180, 0], hold: 8000 },
-    { a: -0.9, p: 1.38, r: 650, t: [150, 180, 0], hold: 8000 },
+    { a: 0.35, p: 1.32, r: 620, t: [-165, 185, 0], hold: 8000 },
+    { a: 3.5, p: 1.32, r: 620, t: [165, 185, 0], hold: 8000 },
     { a: 1.3, p: 1.25, r: 900, t: [150, 190, 0], hold: 5000 },
     { a: 1.0, p: 1.2, r: 800, t: [200, 190, 0], hold: 9500 },
-    { a: -0.6, p: 1.4, r: 700, t: [-100, 170, 0], hold: 8500 },
+    { a: -0.6, p: 1.7, r: 700, t: [-100, 165, 0], hold: 8500 },
     { a: 0.6, p: 1.05, r: 900, t: [-40, 240, 0], hold: 5500 },
-    { a: -0.8, p: 1.32, r: 620, t: [-47, 158, 0], hold: 9500 },
+    { a: -0.7, p: 1.78, r: 560, t: [-47, 152, 0], hold: 9500 },
     { a: 0.8, p: 0.9, r: 1500, t: [40, 310, 0], hold: 5500 },
     { a: 0.8, p: 0.7, r: 620, t: [47, 342, 0], hold: 9500 },
     { a: 0.85, p: 0.8, r: 1700, t: [0, 360, 0], hold: 5000 },
@@ -823,7 +828,7 @@
     a.click();
     a.remove();
   });
-  canvas.addEventListener('pointerdown', function () { if (tour.on) stopTour(); });
+  canvas.addEventListener('pointerdown', function () { if (tour.on) stopTour(); camFly = null; });
 
   var tPrev = performance.now();
   function loop(t) {
@@ -849,7 +854,17 @@
         else { tour.phase = 0; tour.t0 = performance.now(); tour.from = { a: orbit.az, p: orbit.pol, r: orbit.r, t: target.clone() }; }
       }
     }
-    if (tour.labelEls.length) placeLabels();
+    if (camFly) {
+      var kc = Math.min(1, (performance.now() - camFly.t0) / camFly.dur), kce = ease(kc);
+      orbit.az = camFly.from.a + (camFly.to.a - camFly.from.a) * kce;
+      orbit.pol = camFly.from.p + (camFly.to.p - camFly.from.p) * kce;
+      orbit.r = camFly.from.r + (camFly.to.r - camFly.from.r) * kce;
+      target.set(camFly.from.t.x + (camFly.to.t[0] - camFly.from.t.x) * kce,
+                 camFly.from.t.y + (camFly.to.t[1] - camFly.from.t.y) * kce,
+                 camFly.from.t.z + (camFly.to.t[2] - camFly.from.t.z) * kce);
+      applyCamera();
+      if (kc >= 1) camFly = null;
+    }
     items.forEach(function (it) {
       if (!it.obj.visible) { if (it.nutMesh) it.nutMesh.visible = false; return; }
       if (it.delay > 0) { it.delay -= dt; }
