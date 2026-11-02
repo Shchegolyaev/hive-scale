@@ -192,12 +192,69 @@
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
 
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(38, 2, 10, 12000);
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x9a8f80, 0.85));
-  var sun = new THREE.DirectionalLight(0xffffff, 0.8);
+  // окружение: небо + солнце для бликов на металле
+  (function () {
+    var c = document.createElement('canvas'); c.width = 256; c.height = 128;
+    var g = c.getContext('2d');
+    var gr = g.createLinearGradient(0, 0, 0, 128);
+    gr.addColorStop(0, '#fdf6e8'); gr.addColorStop(0.45, '#e7e2d4'); gr.addColorStop(0.55, '#c9c2ae'); gr.addColorStop(1, '#a9a08a');
+    g.fillStyle = gr; g.fillRect(0, 0, 256, 128);
+    g.fillStyle = '#ffffff'; g.beginPath(); g.ellipse(60, 28, 26, 16, 0, 0, Math.PI * 2); g.fill();
+    var tex = new THREE.CanvasTexture(c);
+    tex.mapping = THREE.EquirectangularReflectionMapping;
+    tex.encoding = THREE.sRGBEncoding;
+    var pm = new THREE.PMREMGenerator(renderer);
+    scene.environment = pm.fromEquirectangular(tex).texture;
+    pm.dispose(); tex.dispose();
+  })();
+
+  // процедурная текстура дерева: волокна сосны (контрастные, чтобы читались на любом плане)
+  function woodTexture(base, dark, light) {
+    var c = document.createElement('canvas'); c.width = 256; c.height = 256;
+    var g = c.getContext('2d');
+    g.fillStyle = base; g.fillRect(0, 0, 256, 256);
+    // широкие годовые кольца
+    for (var i = 0; i < 10; i++) {
+      g.strokeStyle = dark;
+      g.globalAlpha = 0.12 + Math.random() * 0.10;
+      g.lineWidth = 10 + Math.random() * 16;
+      var y0 = Math.random() * 256;
+      g.beginPath();
+      g.moveTo(0, y0);
+      for (var x = 0; x <= 256; x += 16) g.lineTo(x, y0 + Math.sin(x * 0.03 + i * 2) * 4);
+      g.stroke();
+    }
+    // тонкие волокна
+    for (i = 0; i < 46; i++) {
+      var y = Math.random() * 256;
+      g.strokeStyle = Math.random() < 0.5 ? dark : light;
+      g.globalAlpha = 0.18 + Math.random() * 0.16;
+      g.lineWidth = 2 + Math.random() * 3;
+      g.beginPath();
+      g.moveTo(0, y);
+      for (x = 0; x <= 256; x += 16) g.lineTo(x, y + Math.sin(x * 0.05 + i) * 2.5);
+      g.stroke();
+    }
+    g.globalAlpha = 0.12;
+    for (i = 0; i < 300; i++) { g.fillStyle = Math.random() < 0.5 ? dark : light; g.fillRect(Math.random() * 256, Math.random() * 256, 2.5, 1.2); }
+    var t = new THREE.CanvasTexture(c);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.encoding = THREE.sRGBEncoding;
+    return t;
+  }
+  var TEX_WOOD = woodTexture('#b98a52', '#7d5c33', '#d7a86e');
+  var TEX_WOOD_L = woodTexture('#c69159', '#8a6238', '#e0b070');
+  var TEX_PLY = woodTexture('#6f4a2e', '#4a3120', '#8a6038');
+  var TEX_HIVE = woodTexture('#e9c867', '#b8963d', '#f6e08e');
+  var WOOD_MAP = { '#B9824A': TEX_WOOD, '#C69159': TEX_WOOD_L, '#7A4E2D': TEX_PLY, '#E3BE5A': TEX_HIVE, '#F2D27A': TEX_HIVE, '#C9A445': TEX_HIVE };
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x9a8f80, 0.45));
+  var sun = new THREE.DirectionalLight(0xffffff, 0.6);
   sun.position.set(-1100, 1900, 1300);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
@@ -205,7 +262,7 @@
   sun.shadow.bias = -0.0006;
   scene.add(sun);
 
-  var groundMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(mutedCol), roughness: 1, transparent: true, opacity: 0.32, depthWrite: false });
+  var groundMat = new THREE.MeshStandardMaterial({ color: new THREE.Color('#CFE0B4'), roughness: 1, transparent: true, opacity: 0.4, depthWrite: false });
   var ground = new THREE.Mesh(new THREE.CircleGeometry(980, 48), groundMat);
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
@@ -247,26 +304,41 @@
   }
 
   DATA.boxes.forEach(function (b) {
+    if (b.name.indexOf('Стоп-болт') === 0) return;   // стоп-болты ставятся анимированным крепежом ниже
     var stepIdx = -1;
     for (var i = 0; i < STEPS.length; i++) { if (STEPS[i].m(b)) { stepIdx = i; break; } }
     if (stepIdx < 0) return;
     var sx = b.x1 - b.x0, sy = b.y1 - b.y0, sz = b.z1 - b.z0;
     var geo = new THREE.BoxGeometry(sx, sz, sy);
-    var metal = b.color === '#C9CED4' || b.color === '#8D99A6' || b.color === '#4F5862' || b.color === '#3A424A';
-    var mat = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(b.color).convertSRGBToLinear(),
-      roughness: metal ? 0.4 : 0.85,
-      metalness: metal ? 0.3 : 0
-    });
+    var woodTex = WOOD_MAP[b.color];
+    var mat;
+    if (woodTex) {
+      var t = woodTex.clone(); t.needsUpdate = true; t.center.set(0.5, 0.5);
+      var dims = [b.x1 - b.x0, b.y1 - b.y0, b.z1 - b.z0];
+      var along = Math.max(dims[0], dims[1]);
+      var rep = Math.max(1, Math.min(10, Math.round(along / 150)));
+      if (b.y1 - b.y0 >= b.x1 - b.x0) { t.rotation = Math.PI / 2; t.repeat.set(Math.max(1, Math.round((b.x1 - b.x0) / 75)), rep); }
+      else t.repeat.set(rep, Math.max(1, Math.round((b.y1 - b.y0) / 75)));
+      mat = new THREE.MeshStandardMaterial({ color: 0xffffff, map: t, roughness: b.group === 'deck' ? 0.42 : 0.8, metalness: 0 });
+    } else {
+      var metal = b.color === '#C9CED4' || b.color === '#8D99A6' || b.color === '#4F5862' || b.color === '#3A424A' || b.color === '#4A545E';
+      mat = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(b.color).convertSRGBToLinear(),
+        roughness: metal ? 0.45 : 0.8,
+        metalness: metal ? 0.6 : 0
+      });
+    }
     var mesh = new THREE.Mesh(geo, mat);
     var cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2, cz = (b.z0 + b.z1) / 2;
     mesh.position.copy(toThree(cx, cy, cz));
     mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), edgeMat));
     register({ obj: mesh, name: b.name, num: b.num, step: stepIdx, base: toThree(cx, cy, cz), ex: defaultEx(cx, cy, cz), kind: 'fade', anim: 1 });
   });
+  window.__items = items;   // отладка: доступ к материалам из консоли
 
   // ---- крепёж ----
-  var MAT_ZINC = new THREE.MeshStandardMaterial({ color: new THREE.Color('#B9C1C9').convertSRGBToLinear(), roughness: 0.35, metalness: 0.5 });
+  var MAT_ZINC = new THREE.MeshStandardMaterial({ color: new THREE.Color('#D8DEE4').convertSRGBToLinear(), roughness: 0.22, metalness: 0.85 });
+  var MAT_SCREW = new THREE.MeshStandardMaterial({ color: new THREE.Color('#35302a').convertSRGBToLinear(), roughness: 0.5, metalness: 0.55 });
   var MAT_DARK = new THREE.MeshStandardMaterial({ color: new THREE.Color('#3A424A').convertSRGBToLinear(), roughness: 0.4, metalness: 0.4 });
   var MAT_ANG = new THREE.MeshStandardMaterial({ color: new THREE.Color('#5B6670').convertSRGBToLinear(), roughness: 0.45, metalness: 0.4 });
   var MAT_PLATE = new THREE.MeshStandardMaterial({ color: new THREE.Color('#4A545E').convertSRGBToLinear(), roughness: 0.4, metalness: 0.45 });
@@ -304,7 +376,7 @@
     g.add(spinner);
     var nut = spinner.userData.nut;
     if (nut) { nut.position.y = nut.userData.fy + 55; g.add(nut); }
-    register({ obj: g, name: o.name, num: o.num, step: o.step, base: g.position.clone(), ex: exM, kind: o.kind || 'screw', axis: dirThree(axisM.x, axisM.y, axisM.z), spin: spinner, anim: 1, nutMesh: nut || null, nutFy: nut ? nut.userData.fy : 0 });
+    register({ obj: g, name: o.name, num: o.num, step: o.step, base: g.position.clone(), ex: exM, kind: o.kind || 'screw', axis: dirThree(axisM.x, axisM.y, axisM.z), spin: spinner, anim: 1, nutMesh: nut || null, nutFy: nut ? nut.userData.fy : 0, off: o.off || 130 });
   }
 
   // 1) саморезы 5×50 в стаканах (шаг 2: ножки): через стенки стакана в брус
@@ -314,8 +386,8 @@
       [55, 115].forEach(function (z) {
         [{ x: sx * 326, ax: -sx }, { x: sx * 224, ax: sx }].forEach(function (d) {
           var sp = new THREE.Group();
-          var sh = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 50, 8), MAT_ZINC); sh.position.y = 25;
-          var hd = new THREE.Mesh(new THREE.CylinderGeometry(4.5, 4.5, 3.5, 10), MAT_ZINC); hd.position.y = 1.75;
+          var sh = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 50, 8), MAT_SCREW); sh.position.y = 25;
+          var hd = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 3.5, 10), MAT_SCREW); hd.position.y = 1.75;
           sp.add(hd); sp.add(sh);
           addFastener({ name: 'Саморез 5×50: стакан → ножка (отверстие Ø5 в стакане уже есть)', num: 1, step: (sx < 0 && sy < 0) ? 1 : 2 },
             sp, { x: d.ax, y: 0, z: 0 }, { x: d.x, y: ly, z: z }, defaultEx(sx * 275, ly, z));
@@ -360,14 +432,14 @@
     g.add(v); g.add(h);
     [-30, 0, 30].forEach(function (yy) {
       var s1 = new THREE.Group();
-      var a = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 8), MAT_ZINC); a.position.y = 20;
-      var b = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_ZINC); b.position.y = 1.5;
+      var a = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 8), MAT_SCREW); a.position.y = 20;
+      var b = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_SCREW); b.position.y = 1.5;
       s1.add(a); s1.add(b);
       addFastener({ name: 'Саморез 6×40: уголок → поперечина (крутим, когда доска уже лежит на полке)', num: 3, step: 7 },
         s1, { x: 0, y: 0, z: 1 }, { x: sx * 118, y: yy, z: 155 }, defaultEx(sx * 118, yy, 155));
       var s2 = new THREE.Group();
-      var a2 = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 8), MAT_ZINC); a2.position.y = 20;
-      var b2 = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_ZINC); b2.position.y = 1.5;
+      var a2 = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 8), MAT_SCREW); a2.position.y = 20;
+      var b2 = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_SCREW); b2.position.y = 1.5;
       s2.add(a2); s2.add(b2);
       addFastener({ name: 'Саморез 6×40: вертикальная полка уголка → лежень (до поперечины)', num: 3, step: sx < 0 ? 5 : 6 },
         s2, { x: sx, y: 0, z: 0 }, { x: sx * 168, y: yy, z: 185 }, defaultEx(sx * 190, yy, 185));
@@ -391,18 +463,18 @@
   });
 
   [[-65, -17], [-65, 17], [-30, -17], [-30, 17]].forEach(function (p) {
-    var sp = makeBolt(78, 4, 7, 6.5, MAT_ZINC);
+    var sp = makeBolt(85, 4, 7, 6.5, MAT_ZINC);
     var washer = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 2, 12), MAT_PLATE);
     washer.position.y = 1; sp.add(washer);
-    addFastener({ name: 'Болт М8 через пластину в датчик · сверло Ø9 насквозь · момент 25 Н·м', num: 4, step: 9 },
+    addFastener({ name: 'Болт М8×85 через пластину в датчик · сверло Ø9 насквозь · момент 25 Н·м', num: 4, step: 9 },
       sp, { x: 0, y: 0, z: 1 }, { x: p[0], y: p[1], z: 150 }, toThree(0, 0, -260));
   });
   [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) {
-    var sp = makeBolt(66, 4, 7, 6.5, MAT_ZINC);
+    var sp = makeBolt(85, 4, 7, 6.5, MAT_ZINC);
     var washer = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 2, 12), MAT_PLATE);
-    washer.position.y = 1; sp.add(washer);
-    addFastener({ name: 'Болт М8 через кузовную шайбу в датчик · сверло Ø9 насквозь · момент 25 Н·м', num: 4, step: 11 },
-      sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 344 }, toThree(0, 0, 120));
+    washer.position.y = 7.5; sp.add(washer);
+    addFastener({ name: 'Болт М8×85 через кузовную шайбу в датчик · сверло Ø9 насквозь · момент 25 Н·м', num: 4, step: 11 },
+      sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 349 }, toThree(0, 0, 120));
   });
 
   // 7) саморезы 6×60 настил → траверса (шаг 12)
@@ -430,6 +502,22 @@
   [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(11, p[0], p[1], 340.8, 9, 0, 0, 1); });
   [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(12, p[0], p[1], 339.4, 32, 0, 0, -1); });
   [[-275, -275], [-275, 275], [275, -275], [275, 275]].forEach(function (p) { hole(13, p[0], p[1], 300.8, 8, 0, 0, 1); });
+
+  // 9) стоп-шпильки: вкручиваются в торцы ножек, следом гайка + контргайка (зазор до настила 3 мм)
+  [[-275, -275], [-275, 275], [275, -275], [275, 275]].forEach(function (p) {
+    var sp = new THREE.Group();
+    var sh = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 45, 10), MAT_ZINC); sh.position.y = 22.5;
+    sp.add(sh);
+    var nutG = new THREE.Group();
+    var wash = new THREE.Mesh(new THREE.CylinderGeometry(11, 11, 2, 12), MAT_PLATE); wash.position.y = 1;
+    var n1 = new THREE.Mesh(new THREE.CylinderGeometry(8.6, 8.6, 8, 6), MAT_ZINC); n1.position.y = 6;
+    var n2 = new THREE.Mesh(new THREE.CylinderGeometry(8.6, 8.6, 8, 6), MAT_ZINC); n2.position.y = 13;
+    nutG.add(wash); nutG.add(n1); nutG.add(n2);
+    nutG.userData.fy = 0;
+    sp.userData.nut = nutG;
+    addFastener({ name: 'Стоп-шпилька М10×100: сверло Ø8 в торец ножки на 70 мм · гайка + контргайка · зазор до настила 3 мм', num: 8, step: 13, off: 60 },
+      sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 339 }, toThree(0, 0, 160));
+  });
 
   // ---- камера ----
   var orbit = { az: 0.72, pol: 1.08, r: 2700 };
@@ -596,7 +684,7 @@
     [['пластина 60×60×4 под головки, снизу', -47, 0, 152], ['сверло Ø9 насквозь · 25 Н·м', -47, 30, 192]],
     [['зазор траверса ↔ лежни — 3–4 см', 200, 300, 0]],
     [['кузовные шайбы Ø30 · гнёзда Ø32 на 9 мм в фанере', 47, 0, 348]],
-    [['саморезы 6×60 ×8', 230, -35, 372], ['гнёзда Ø15–18 под головки М8', 65, 0, 372]],
+    [['саморезы 6×60 ×8', 230, -35, 372], ['гнёзда Ø32 на 9 мм над кузовными шайбами', 65, 0, 372]],
     [['сверло Ø8 на 70 мм в торец', 326, 326, 315], ['зазор до настила 3 мм', 284, 284, 348]],
     [['корпус — на неподвижной ножке', 360, 275, 240]],
     [['вес: настил → траверса → датчик → рама', 0, 0, 385]],
@@ -716,7 +804,7 @@
         var p = ease(it.anim);
         if (it.kind === 'screw') {
           var bp = Math.min(1, p / 0.6);   // фаза 1: болт заходит снаружи и вкручивается
-          var off = (1 - ease(bp)) * 130;
+          var off = (1 - ease(bp)) * (it.off || 130);
           it.obj.position.set(it.base.x + it.ex.x * f - it.axis.x * off, it.base.y + it.ex.y * f - it.axis.y * off, it.base.z + it.ex.z * f - it.axis.z * off);
           if (it.spin) it.spin.rotation.y = ease(bp) * 12;
           if (it.nutMesh) {                // фаза 2: гайка накручивается на хвост болта
