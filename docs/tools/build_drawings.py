@@ -52,7 +52,7 @@ def front():
     OX, OY = 560, 760           # экранные координаты точки x=0, z=0
     X = lambda x: OX + x * S
     Z = lambda z: OY - z * S
-    o = head(W, H, "Вид спереди", "размеры в мм · улей показан условно — сними размеры своего · датчик L6G — по паспорту")
+    o = head(W, H, "Вид спереди", "размеры в мм · улей Нижегородец из ППУ (дно 550×550, корпус 520×310, магазин 160, крыша 100) · датчик — по паспорту")
     # грунт
     o.append(f'<rect x="{X(-620):.1f}" y="{Z(0):.1f}" width="{1240 * S:.1f}" height="{(M.LEG_DOWN + 80) * S:.1f}" fill="url(#soil)"/>')
     o.append(f'<line x1="{X(-640):.1f}" y1="{Z(0):.1f}" x2="{X(640):.1f}" y2="{Z(0):.1f}" stroke="{INK}" stroke-width="1.6"/>')
@@ -73,7 +73,7 @@ def front():
     for b in hb:
         o.append(f'<rect x="{X(b["x0"]):.1f}" y="{Z(b["z1"]):.1f}" width="{(b["x1"] - b["x0"]) * S:.1f}" height="{(b["z1"] - b["z0"]) * S:.1f}" '
                  f'fill="#F2D27A" fill-opacity="0.25" stroke="#C9A445" stroke-width="1.2" stroke-dasharray="6 4"/>')
-    o.append(f'<text x="{X(0):.1f}" y="{Z(1000):.1f}" fill="#A8862E" font-size="16" font-weight="700" text-anchor="middle">улей (условно)</text>')
+    o.append(f'<text x="{X(0):.1f}" y="{Z(M.HEIGHT_TOP + 40):.1f}" fill="#A8862E" font-size="16" font-weight="700" text-anchor="middle">улей Нижегородец (ППУ)</text>')
     # ремень
     for b in M.boxes:
         if b["group"] == "strap" and b["name"] == "Ремень" and b["y0"] < 0:
@@ -125,7 +125,7 @@ def top():
     # настил и улей
     o.append(f'<rect x="{X(-300):.1f}" y="{Y(300):.1f}" width="{600 * S:.1f}" height="{600 * S:.1f}" fill="#7A4E2D" fill-opacity="0.12" stroke="#7A4E2D" stroke-width="2" stroke-dasharray="10 6"/>')
     o.append(f'<rect x="{X(-M.HIVE_X / 2):.1f}" y="{Y(M.HIVE_Y / 2):.1f}" width="{M.HIVE_X * S:.1f}" height="{M.HIVE_Y * S:.1f}" fill="none" stroke="#C9A445" stroke-width="1.5" stroke-dasharray="3 5"/>')
-    o.append(f'<text x="{X(0):.1f}" y="{Y(-M.HIVE_Y / 2) - 8:.1f}" fill="#A8862E" font-size="13" text-anchor="middle">контур дна улья (условно)</text>')
+    o.append(f'<text x="{X(0):.1f}" y="{Y(-M.HIVE_Y / 2) - 8:.1f}" fill="#A8862E" font-size="13" text-anchor="middle">контур дна улья 550×550</text>')
     # стрелка «перед / леток»
     o.append(f'<text x="{X(0):.1f}" y="{Y(-560):.1f}" fill="{MUTED}" font-size="14" font-weight="700" text-anchor="middle">▼ перед (леток)</text>')
     # размеры

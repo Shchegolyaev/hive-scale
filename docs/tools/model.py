@@ -43,7 +43,7 @@ z_ut1 = z_ut0 + BOARD                          # 340 — верх верхней
 z_deck = z_ut1 + DECK_T                        # 367
 z_leg = z_ut1 - 40                             # 300 — верх ножек; в торце — стоп-болт
 
-HIVE_X, HIVE_Y = 530, 550   # условные габариты улья; измерь свой
+HIVE_X, HIVE_Y = 550, 550   # габарит улья по дну и крыше (Нижегородец, реальные размеры)
 
 boxes = []
 
@@ -95,32 +95,31 @@ for sx in (-1, 1):
 # 9. Коробка электроники — на наружной грани задней правой ножки (неподвижная часть)
 box("Корпус электроники IP65", LEG + 50, LEG + 120, LEG - 80, LEG + 80, CUP + 10, CUP + 170, BOX, "base", 9)
 
-# Улей (условные размеры)
-hx, hy = HIVE_X / 2, HIVE_Y / 2
-for lx in (-hx + 40, 0, hx - 40):
-    for ly in (-hy + 40, hy - 40):
-        box("Ножка дна", lx - 15, lx + 15, ly - 15, ly + 15, z_deck, z_deck + 20, HIVE_D, "hive")
-z = z_deck + 20
-box("Дно", -hx, hx, -hy, hy, z, z + 60, HIVE_D, "hive"); z += 60
-box("Корпус", -hx, hx, -hy, hy, z, z + 330, HIVE, "hive"); z += 330
-box("Корпус", -hx, hx, -hy, hy, z, z + 330, HIVE, "hive"); z += 330
-box("Крыша", -hx - 10, hx + 10, -hy - 10, hy + 10, z, z + 80, ROOF, "hive"); z_top = z + 80
+# Улей «Нижегородец» из ППУ (beelekar.ru), реальные размеры:
+# дно 550×550×120, корпус 520×520×310, магазин 520×520×160, крыша 550×550×100
+BODY = 520
+LID = 550
+z = z_deck
+box("Дно: ППУ 550×550×120", -LID / 2, LID / 2, -LID / 2, LID / 2, z, z + 120, HIVE_D, "hive"); z += 120
+box("Корпус: ППУ 520×520×310", -BODY / 2, BODY / 2, -BODY / 2, BODY / 2, z, z + 310, HIVE, "hive"); z += 310
+box("Корпус: ППУ 520×520×310", -BODY / 2, BODY / 2, -BODY / 2, BODY / 2, z, z + 310, HIVE, "hive"); z += 310
+box("Магазин: ППУ 520×520×160", -BODY / 2, BODY / 2, -BODY / 2, BODY / 2, z, z + 160, HIVE, "hive"); z += 160
+box("Крыша: ППУ 550×550×100", -LID / 2, LID / 2, -LID / 2, LID / 2, z, z + 100, ROOF, "hive"); z_top = z + 100
 
 # Ремни — вдоль X: через крышу, по бокам улья и по низу настила (в стороне от траверсы)
-z_top_roof = z_top
 for cy in (-150, 150):
     y0, y1 = cy - 13, cy + 13
     for sx in (-1, 1):
-        x0, x1 = sorted((sx * (hx + 3), sx * hx))
-        box("Ремень", x0, x1, y0, y1, z_deck, z_top - 80, STRAP, "strap")
-        x0, x1 = sorted((sx * (hx + 13), sx * (hx + 10)))
-        box("Ремень", x0, x1, y0, y1, z_top - 80, z_top + 3, STRAP, "strap")
+        x0, x1 = sorted((sx * (BODY / 2), sx * (BODY / 2 + 3)))
+        box("Ремень", x0, x1, y0, y1, z_deck, z_top - 100, STRAP, "strap")
+        x0, x1 = sorted((sx * (LID / 2), sx * (LID / 2 + 3)))
+        box("Ремень", x0, x1, y0, y1, z_top - 100, z_top + 3, STRAP, "strap")
         x0, x1 = sorted((sx * (DECK / 2 + 3), sx * DECK / 2))
         box("Ремень", x0, x1, y0, y1, z_ut1 - 3, z_deck, STRAP, "strap")
-        x0, x1 = sorted((sx * hx, sx * DECK / 2 + 3 * sx))
+        x0, x1 = sorted((sx * (BODY / 2), sx * DECK / 2 + 3 * sx))
         box("Ремень", x0, x1, y0, y1, z_deck, z_deck + 3, STRAP, "strap")
-    box("Ремень", -hx - 13, hx + 13, y0, y1, z_top, z_top + 3, STRAP, "strap")
+    box("Ремень", -LID / 2 - 3, LID / 2 + 3, y0, y1, z_top, z_top + 3, STRAP, "strap")
     box("Ремень", -DECK / 2 - 3, DECK / 2 + 3, y0, y1, z_ut1 - 3, z_ut1, STRAP, "strap")
-    box("Храповик", hx + 3, hx + 9, y0 - 5, y1 + 5, z_deck + 250, z_deck + 300, "#3A424A", "strap")
+    box("Храповик", BODY / 2 + 3, BODY / 2 + 9, y0 - 5, y1 + 5, z_deck + 250, z_deck + 300, "#3A424A", "strap")
 
 HEIGHT_TOP = z_top
