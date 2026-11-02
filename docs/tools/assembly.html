@@ -384,10 +384,10 @@
     [-1, 1].forEach(function (sy) {
       var ly = sy * 275;
       [55, 115].forEach(function (z) {
-        [{ x: sx * 326, ax: -sx }, { x: sx * 224, ax: sx }].forEach(function (d) {
+        [{ x: sx * 330.5, ax: -sx }, { x: sx * 219.5, ax: sx }].forEach(function (d) {
           var sp = new THREE.Group();
           var sh = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 50, 8), MAT_SCREW); sh.position.y = 25;
-          var hd = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 3.5, 10), MAT_SCREW); hd.position.y = 1.75;
+          var hd = new THREE.Mesh(new THREE.CylinderGeometry(6.5, 6.5, 3.5, 10), MAT_SCREW); hd.position.y = 1.75;
           sp.add(hd); sp.add(sh);
           addFastener({ name: 'Саморез 5×50: стакан → ножка (отверстие Ø5 в стакане уже есть)', num: 1, step: (sx < 0 && sy < 0) ? 1 : 2 },
             sp, { x: d.ax, y: 0, z: 0 }, { x: d.x, y: ly, z: z }, defaultEx(sx * 275, ly, z));
@@ -402,11 +402,13 @@
       var ly = sy * 275;
       [190, 235].forEach(function (z) {
         var sp = makeBolt(160, 5, 8.6, 7, MAT_ZINC);
-        var washer = new THREE.Mesh(new THREE.CylinderGeometry(11, 11, 2, 12), MAT_PLATE);
-        washer.position.y = 150.5; sp.add(washer);
-        addNut(sp, 154, MAT_ZINC);
+        var hw = new THREE.Mesh(new THREE.CylinderGeometry(11, 11, 2, 12), MAT_PLATE);   // шайба под головкой
+        hw.position.y = 8; sp.add(hw);
+        var washer = new THREE.Mesh(new THREE.CylinderGeometry(11, 11, 2, 12), MAT_PLATE); // шайба под гайкой
+        washer.position.y = 160; sp.add(washer);
+        addNut(sp, 163.5, MAT_ZINC);
         addFastener({ name: 'Болт М10×160 насквозь: лежень + ножка · сверло Ø11 · ключ 17', num: 2, step: sx < 0 ? 3 : 4 },
-          sp, { x: sx, y: 0, z: 0 }, { x: sx * 175, y: ly + sy * 25, z: z }, dirThree(sx, 0, 0).multiplyScalar(320));
+          sp, { x: sx, y: 0, z: 0 }, { x: sx * 166, y: ly + sy * 25, z: z }, dirThree(sx, 0, 0).multiplyScalar(320));
       });
     });
   });
@@ -416,9 +418,9 @@
     [-25, 25].forEach(function (y) {
       var sp = makeBolt(120, 5, 8, 6.5, MAT_DARK);
       var washer = new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 2, 12), MAT_ZINC);
-      washer.position.y = 121; sp.add(washer);
+      washer.position.y = 7.5; sp.add(washer);
       addFastener({ name: 'Глухарь 10×120: лежень → торец поперечины · сверло Ø6 на ~70 мм', num: 3, step: 7 },
-        sp, { x: -sx, y: 0, z: 0 }, { x: sx * 225, y: y, z: 185 }, dirThree(sx, 0, 0).multiplyScalar(300));
+        sp, { x: -sx, y: 0, z: 0 }, { x: sx * 233.5, y: y, z: 185 }, dirThree(sx, 0, 0).multiplyScalar(300));
     });
   });
 
@@ -436,13 +438,13 @@
       var b = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_SCREW); b.position.y = 1.5;
       s1.add(a); s1.add(b);
       addFastener({ name: 'Саморез 6×40: уголок → поперечина (крутим, когда доска уже лежит на полке)', num: 3, step: 7 },
-        s1, { x: 0, y: 0, z: 1 }, { x: sx * 118, y: yy, z: 155 }, defaultEx(sx * 118, yy, 155));
+        s1, { x: 0, y: 0, z: 1 }, { x: sx * 118, y: yy, z: 160 }, defaultEx(sx * 118, yy, 155));
       var s2 = new THREE.Group();
       var a2 = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 8), MAT_SCREW); a2.position.y = 20;
       var b2 = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), MAT_SCREW); b2.position.y = 1.5;
       s2.add(a2); s2.add(b2);
       addFastener({ name: 'Саморез 6×40: вертикальная полка уголка → лежень (до поперечины)', num: 3, step: sx < 0 ? 5 : 6 },
-        s2, { x: sx, y: 0, z: 0 }, { x: sx * 168, y: yy, z: 185 }, defaultEx(sx * 190, yy, 185));
+        s2, { x: sx, y: 0, z: 0 }, { x: sx * 172, y: yy, z: 185 }, defaultEx(sx * 190, yy, 185));
     });
     register({ obj: g, name: 'Уголок усиленный 70×70: полка-выступ под поперечину + к лежню', num: 3, step: sx < 0 ? 5 : 6, base: new THREE.Vector3(0, 0, 0), ex: dirThree(sx, 0, 0).multiplyScalar(340), kind: 'slide', axis: dirThree(sx, 0, 0), anim: 1, edges: true });
   });
@@ -483,8 +485,8 @@
     var sh = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 60, 8), MAT_ZINC); sh.position.y = 30;
     var hd = new THREE.Mesh(new THREE.CylinderGeometry(5.5, 5.5, 3, 12), MAT_ZINC); hd.position.y = 1.5;
     sp.add(hd); sp.add(sh);
-    addFastener({ name: 'Саморез 6×60 потайной: настил → траверса · рядом гнездо Ø15–18 под болт М8', num: 7, step: 12 },
-      sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 367 }, toThree(p[0] * 0.3, p[1] * 0.3, 420));
+    addFastener({ name: 'Саморез 6×60 потайной: настил → траверса', num: 7, step: 12 },
+      sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 370 }, toThree(p[0] * 0.3, p[1] * 0.3, 420));
   });
 
   // 8) отверстия и гнёзда — видны в дереве заранее, до вкручивания
@@ -516,7 +518,7 @@
     nutG.userData.fy = 0;
     sp.userData.nut = nutG;
     addFastener({ name: 'Стоп-шпилька М10×100: сверло Ø8 в торец ножки на 70 мм · гайка + контргайка · зазор до настила 3 мм', num: 8, step: 13, off: 60 },
-      sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 339 }, toThree(0, 0, 160));
+      sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 337 }, toThree(0, 0, 160));
   });
 
   // ---- камера ----
