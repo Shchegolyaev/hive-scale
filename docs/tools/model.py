@@ -106,20 +106,15 @@ box("Корпус: ППУ 520×520×310", -BODY / 2, BODY / 2, -BODY / 2, BODY /
 box("Магазин: ППУ 520×520×160", -BODY / 2, BODY / 2, -BODY / 2, BODY / 2, z, z + 160, HIVE, "hive"); z += 160
 box("Крыша: ППУ 550×550×100", -LID / 2, LID / 2, -LID / 2, LID / 2, z, z + 100, ROOF, "hive"); z_top = z + 100
 
-# Ремни — вдоль X: через крышу, по бокам улья и по низу настила (в стороне от траверсы)
-for cy in (-150, 150):
-    y0, y1 = cy - 13, cy + 13
-    for sx in (-1, 1):
-        x0, x1 = sorted((sx * (BODY / 2), sx * (BODY / 2 + 3)))
-        box("Ремень", x0, x1, y0, y1, z_deck, z_top - 100, STRAP, "strap")
-        x0, x1 = sorted((sx * (LID / 2), sx * (LID / 2 + 3)))
-        box("Ремень", x0, x1, y0, y1, z_top - 100, z_top + 3, STRAP, "strap")
-        x0, x1 = sorted((sx * (DECK / 2 + 3), sx * DECK / 2))
-        box("Ремень", x0, x1, y0, y1, z_ut1 - 3, z_deck, STRAP, "strap")
-        x0, x1 = sorted((sx * (BODY / 2), sx * DECK / 2 + 3 * sx))
-        box("Ремень", x0, x1, y0, y1, z_deck, z_deck + 3, STRAP, "strap")
-    box("Ремень", -LID / 2 - 3, LID / 2 + 3, y0, y1, z_top, z_top + 3, STRAP, "strap")
-    box("Ремень", -DECK / 2 - 3, DECK / 2 + 3, y0, y1, z_ut1 - 3, z_ut1, STRAP, "strap")
-    box("Храповик", BODY / 2 + 3, BODY / 2 + 9, y0 - 5, y1 + 5, z_deck + 250, z_deck + 300, "#3A424A", "strap")
+# Ремень — самозатягивающийся крюк-болт (50 мм): крюки за стоп-шпильки передней и
+# задней ножек, полотно по кромке крыши. Улей держится за раму: датчик видит только прижим.
+SW = 50                                  # ширина ленты
+sx0, sx1 = LID / 2 - SW / 2, LID / 2 + SW / 2   # полотно по правой кромке крыши: x 250..300
+box("Ремень крюк-болт: полотно по кромке крыши", sx0, sx1, -LID / 2 - 4, LID / 2 + 4, z_top, z_top + 3, STRAP, "strap")
+box("Ремень: ветвь к передней шпильке", sx0, sx1, -LID / 2 - 4, -LID / 2, 330, z_top, STRAP, "strap")
+box("Ремень: ветвь к задней шпильке", sx0, sx1, LID / 2, LID / 2 + 4, 330, z_top, STRAP, "strap")
+box("Крюк ремня за стоп-шпильку (передняя)", LID / 2 - 8, LID / 2 + 8, -LID / 2 - 8, -LID / 2 + 8, 303, 327, STEEL_D, "strap")
+box("Крюк ремня за стоп-шпильку (задняя)", LID / 2 - 8, LID / 2 + 8, LID / 2 - 8, LID / 2 + 8, 303, 327, STEEL_D, "strap")
+box("Механизм натяжения ремня", LID / 2 - SW / 2 + 4, LID / 2 + SW / 2 - 4, LID / 2 + 4, LID / 2 + 13, 560, 640, "#3A424A", "strap")
 
 HEIGHT_TOP = z_top
