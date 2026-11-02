@@ -31,9 +31,9 @@
 </head>
 <body>
 <div id="assembly-viz">
-  <h3>Сборка платформы весов — 23 шага, каждая операция отдельно</h3>
+  <h3>Сборка платформы весов — 24 шага, каждая операция отдельно</h3>
   <div class="viz-row" style="justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 12px">
-    <span id="asm-step-num" class="text-small text-muted">Шаг 1 из 23</span>
+    <span id="asm-step-num" class="text-small text-muted">Шаг 1 из 24</span>
     <span class="text-small text-muted">вращение — мышью · масштаб — колесом · деталь — наведением</span>
   </div>
   <div class="progress" role="progressbar" aria-label="Шаг сборки" aria-valuenow="9" aria-valuemin="1" aria-valuemax="100" style="height:6px">
@@ -129,9 +129,12 @@
     { t: 'Саморезы полок', badges: ['крепёж'],
       d: 'Сверлим 6 отверстий Ø4 в поперечину над полками и докручиваем 6 саморезов 6×40 через верхние полки уголков.',
       m: function () { return false; } },
-    { t: 'Проставка и датчик', badges: ['поз. 4', 'поз. 5'],
-      d: 'На поперечину — стальная проставка 10 мм, на неё — датчик L6G стрелкой вниз, по нагрузке. Кабель — со стороны неподвижного конца.',
-      m: function (b) { return (b.name.indexOf('Проставка') === 0 && b.name.indexOf('неподвижный') >= 0) || b.name.indexOf('Датчик') === 0; } },
+    { t: 'Проставка на поперечину', badges: ['поз. 4'],
+      d: 'Стальная проставка 10 мм — на поперечину, под неподвижный конец датчика (с этой стороны выходит кабель). Она приподнимает датчик над деревом.',
+      m: function (b) { return b.name.indexOf('Проставка') === 0 && b.name.indexOf('неподвижный') >= 0; } },
+    { t: 'Датчик L6G 300 кг', badges: ['поз. 5'],
+      d: 'Датчик ложится на проставку стрелкой вниз, по нагрузке. Кабель уходит к корпусу электроники на задней ножке.',
+      m: function (b) { return b.name.indexOf('Датчик') === 0; } },
     { t: 'Болты М8 снизу', badges: ['поз. 4'],
       d: 'Сверлим 4 отверстия Ø9 насквозь поперечины по отверстиям датчика. Снизу прикладываем пластину 60×60×4 и вкручиваем 4 болта М8×85 — момент 25 Н·м, подтянуть через месяц.',
       m: function () { return false; } },
@@ -177,6 +180,7 @@
     ['Ничего не сверлим: доска ложится на полки', 'Заготовку 400 подрезать точно между лежнями'],
     ['Сверло Ø6 через лежень в торец, ~70 мм ×4', 'Глухарь 10×120 с шайбой — 4 шт.'],
     ['Сверло Ø4 в поперечину ×6', 'Саморез 6×40 через полки уголков'],
+    ['Проставка — под неподвижный конец датчика (там кабель)'],
     ['Датчик стрелкой вниз, кабель к неподвижному концу'],
     ['Сверло Ø9 насквозь поперечины ×4', 'Болт М8×85 через пластину 60×60×4 — 25 Н·м'],
     ['Зазор траверса ↔ лежни 3–4 см — не касаются'],
@@ -408,9 +412,13 @@
     g.add(spinner);
     var nut = spinner.userData.nut;
     if (nut) { nut.position.y = nut.userData.fy + 55; g.add(nut); }
-    var same = 0;
-    items.forEach(function (it) { if (it.step === o.step && it.kind === 'screw') same++; });
-    register({ obj: g, name: o.name, num: o.num, step: o.step, base: g.position.clone(), ex: exM, kind: o.kind || 'screw', axis: dirThree(axisM.x, axisM.y, axisM.z), spin: spinner, anim: 1, nutMesh: nut || null, nutFy: nut ? nut.userData.fy : 0, off: o.off || 130, delay0: 1.2 + same * 0.55 });
+    var same = 0, dBase = 1.2;
+    items.forEach(function (it) {
+      if (it.step !== o.step) return;
+      if (it.kind === 'screw') same++;
+      if (it.kind === 'slide' || it.kind === 'drop') dBase = Math.max(dBase, (it.delay0 || 0) + 1.3);
+    });
+    register({ obj: g, name: o.name, num: o.num, step: o.step, base: g.position.clone(), ex: exM, kind: o.kind || 'screw', axis: dirThree(axisM.x, axisM.y, axisM.z), spin: spinner, anim: 1, nutMesh: nut || null, nutFy: nut ? nut.userData.fy : 0, off: o.off || 130, delay0: dBase + same * 0.55 });
   }
 
   // 1) саморезы 5×50 в стаканах (шаг 2: ножки): через стенки стакана в брус
@@ -494,28 +502,28 @@
     m.position.copy(toThree(cx, cy, cz));
     register({ obj: m, name: name, num: 4, step: step, base: toThree(cx, cy, cz), ex: toThree(0, 0, cz > 300 ? 200 : 60), kind: 'drop', axis: dirThree(0, 0, -1), anim: 1, edges: true, delay0: 0.4, dropH: 240 });
   }
-  plate('Пластина 60×60×4 — только снизу, под поперечиной (сверху ей мешал бы настил)', 13, -47, 0, 158, false);
+  plate('Пластина 60×60×4 — только снизу, под поперечиной (сверху ей мешал бы настил)', 14, -47, 0, 158, false);
 
   // сверху вместо пластины — кузовные шайбы Ø30: не мешают настилу, прячутся в гнёзда Ø32
   var washCount = 0;
   [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) {
     var w = new THREE.Mesh(new THREE.CylinderGeometry(15, 15, 3, 20), MAT_PLATE);
     w.position.copy(toThree(p[0], p[1], 341.5));
-    register({ obj: w, name: 'Кузовная шайба М8 Ø30 · в фанере под ней гнездо Ø32 на 9 мм', num: 4, step: 15, base: w.position.clone(), ex: toThree(0, 0, 200), kind: 'drop', anim: 1, delay0: 0.3 * washCount++, dropH: 260 });
+    register({ obj: w, name: 'Кузовная шайба М8 Ø30 · в фанере под ней гнездо Ø32 на 9 мм', num: 4, step: 16, base: w.position.clone(), ex: toThree(0, 0, 200), kind: 'drop', anim: 1, delay0: 0.3 * washCount++, dropH: 260 });
   });
 
   [[-65, -17], [-65, 17], [-30, -17], [-30, 17]].forEach(function (p) {
     var sp = makeBolt(85, 4, 7, 6.5, MAT_ZINC);
     var washer = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 2, 12), MAT_PLATE);
     washer.position.y = 1; sp.add(washer);
-    addFastener({ name: 'Болт М8×85 через пластину в датчик · сверло Ø9 насквозь · момент 25 Н·м', num: 4, step: 13 },
+    addFastener({ name: 'Болт М8×85 через пластину в датчик · сверло Ø9 насквозь · момент 25 Н·м', num: 4, step: 14 },
       sp, { x: 0, y: 0, z: 1 }, { x: p[0], y: p[1], z: 150 }, toThree(0, 0, -260));
   });
   [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) {
     var sp = makeBolt(85, 4, 7, 6.5, MAT_ZINC);
     var washer = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 2, 12), MAT_PLATE);
     washer.position.y = 7.5; sp.add(washer);
-    addFastener({ name: 'Болт М8×85 через кузовную шайбу в датчик · сверло Ø9 насквозь · момент 25 Н·м', num: 4, step: 15 },
+    addFastener({ name: 'Болт М8×85 через кузовную шайбу в датчик · сверло Ø9 насквозь · момент 25 Н·м', num: 4, step: 16 },
       sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 349 }, toThree(0, 0, 120));
   });
 
@@ -526,7 +534,7 @@
     var stp = new THREE.Mesh(new THREE.ConeGeometry(3, 6, 8), MAT_ZINC); stp.position.y = 63;
     var hd = new THREE.Mesh(new THREE.CylinderGeometry(5.5, 5.5, 3, 12), MAT_ZINC); hd.position.y = 1.5;
     sp.add(hd); sp.add(sh); sp.add(stp);
-    addFastener({ name: 'Саморез 6×60 потайной: настил → траверса', num: 7, step: 18 },
+    addFastener({ name: 'Саморез 6×60 потайной: настил → траверса', num: 7, step: 19 },
       sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 370 }, toThree(p[0] * 0.3, p[1] * 0.3, 420));
   });
 
@@ -541,10 +549,10 @@
   [-1, 1].forEach(function (sx) {
     [-25, 25].forEach(function (y) { hole(10, sx * 225.8, y, 185, 6, sx, 0, 0); });
   });
-  [[-65, -17], [-65, 17], [-30, -17], [-30, 17]].forEach(function (p) { hole(13, p[0], p[1], 159.3, 9, 0, 0, -1); });
-  [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(15, p[0], p[1], 340.8, 9, 0, 0, 1); });
-  [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(17, p[0], p[1], 368.2, 32, 0, 0, 1); });
-  [[-275, -275], [-275, 275], [275, -275], [275, 275]].forEach(function (p) { hole(19, p[0], p[1], 300.8, 8, 0, 0, 1); });
+  [[-65, -17], [-65, 17], [-30, -17], [-30, 17]].forEach(function (p) { hole(14, p[0], p[1], 159.3, 9, 0, 0, -1); });
+  [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(16, p[0], p[1], 340.8, 9, 0, 0, 1); });
+  [[30, -17], [30, 17], [65, -17], [65, 17]].forEach(function (p) { hole(18, p[0], p[1], 368.2, 32, 0, 0, 1); });
+  [[-275, -275], [-275, 275], [275, -275], [275, 275]].forEach(function (p) { hole(20, p[0], p[1], 300.8, 8, 0, 0, 1); });
 
   // пилотные отверстия Ø4 под саморезы
   [-1, 1].forEach(function (sx) {
@@ -554,7 +562,7 @@
     [-30, 0, 30].forEach(function (yy) { hole(11, sx * 118, yy, 155.3, 4, 0, 0, -1); });
   });
   [[-230, -35], [-230, 35], [-100, -35], [-100, 35], [100, -35], [100, 35], [230, -35], [230, 35]].forEach(function (p) {
-    hole(18, p[0], p[1], 367.8, 4, 0, 0, 1);
+    hole(19, p[0], p[1], 367.8, 4, 0, 0, 1);
   });
 
   // 9) стоп-шпильки: вкручиваются в торцы ножек, следом гайка + контргайка (зазор до настила 3 мм)
@@ -569,7 +577,7 @@
     nutG.add(wash); nutG.add(n1); nutG.add(n2);
     nutG.userData.fy = 0;
     sp.userData.nut = nutG;
-    addFastener({ name: 'Стоп-шпилька М10×100: сверло Ø8 в торец ножки на 70 мм · гайка + контргайка · зазор до настила 3 мм', num: 8, step: 19, off: 60 },
+    addFastener({ name: 'Стоп-шпилька М10×100: сверло Ø8 в торец ножки на 70 мм · гайка + контргайка · зазор до настила 3 мм', num: 8, step: 20, off: 60 },
       sp, { x: 0, y: 0, z: -1 }, { x: p[0], y: p[1], z: 337 }, toThree(0, 0, 160));
   });
 
@@ -722,11 +730,12 @@
     { a: -1.1, p: 1.2, r: 1000, t: [200, 215, 0], hold: 9500 },
     { a: 0.35, p: 1.32, r: 620, t: [-165, 185, 0], hold: 8000 },
     { a: 3.5, p: 1.32, r: 620, t: [165, 185, 0], hold: 8000 },
-    { a: 1.3, p: 1.25, r: 900, t: [150, 190, 0], hold: 5000 },
+    { a: 0.8, p: 0.75, r: 1500, t: [0, 240, 0], hold: 5000 },
     { a: 1.0, p: 1.2, r: 800, t: [200, 190, 0], hold: 9500 },
-    { a: -0.75, p: 1.65, r: 1250, t: [0, 185, 0], hold: 9500 },
-    { a: 0.6, p: 1.05, r: 900, t: [-40, 240, 0], hold: 5500 },
-    { a: -0.7, p: 1.78, r: 560, t: [-47, 152, 0], hold: 9500 },
+    { a: -0.75, p: 1.75, r: 1000, t: [0, 200, 0], hold: 9500 },
+    { a: 0.6, p: 1.05, r: 800, t: [-40, 225, 0], hold: 5500 },
+    { a: -0.5, p: 1.1, r: 700, t: [-40, 250, 0], hold: 6000 },
+    { a: 0.0, p: 1.78, r: 470, t: [-47, 148, 0], hold: 9500 },
     { a: 0.8, p: 0.9, r: 1500, t: [40, 310, 0], hold: 5500 },
     { a: 0.8, p: 0.7, r: 620, t: [47, 342, 0], hold: 9500 },
     { a: 0.85, p: 0.8, r: 1700, t: [0, 360, 0], hold: 5000 },
@@ -750,6 +759,7 @@
     [['доска ложится на полки уголков', 0, 168, 0]],
     [['Ø6 на 70 мм · глухарь 10×120', 225, 25, 185]],
     [['Ø4 → саморезы полок 6×40', -118, 30, 158]],
+    [['проставка 10 мм — под неподвижный конец', -47, 25, 215]],
     [['стрелка датчика — вниз', -47, 25, 250]],
     [['Ø9 насквозь · пластина · 25 Н·м', -47, 0, 152]],
     [['зазор до лежней 3–4 см', 200, 300, 0]],
@@ -883,7 +893,7 @@
         }
       }
       else if (it.anim < 1) {
-        it.anim = Math.min(1, it.anim + dt / (it.kind === 'drill' ? 0.5 : it.kind === 'drop' ? 1.1 : 2.2));
+        it.anim = Math.min(1, it.anim + dt / (it.kind === 'drill' ? 0.5 : it.kind === 'drop' ? 1.1 : it.kind === 'slide' ? 1.0 : 2.2));
         var p = ease(it.anim);
         if (it.kind === 'drill') {           // фаза 0: высверливаем отверстие
           var sc = 1.7 - 0.7 * p;
