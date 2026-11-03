@@ -6,7 +6,6 @@
 <rect x="262.4" y="760.0" width="595.2" height="470.4" fill="url(#soil)"/>
 <line x1="252.8" y1="760.0" x2="867.2" y2="760.0" stroke="#2B2118" stroke-width="1.6"/>
 <text x="267.2" y="780.0" fill="#6B5D4B" font-size="13">земля</text>
-<rect x="663.2" y="635.2" width="72.0" height="48.0" fill="#E6E9EC" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="404.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="668.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="418.4" y="760.0" width="19.2" height="432.0" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
@@ -31,6 +30,7 @@
 <rect x="518.2" y="654.4" width="38.4" height="4.8" fill="#4F5862" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="518.2" y="625.6" width="83.5" height="28.8" fill="#C9CED4" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="416.0" y="612.6" width="288.0" height="13.0" fill="#7A4E2D" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="668.0" y="647.2" width="33.6" height="33.6" fill="#E6E9EC" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="404.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="668.0" y="688.0" width="48.0" height="70.6" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="418.4" y="760.0" width="19.2" height="432.0" fill="#8D99A6" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
