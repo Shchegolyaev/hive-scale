@@ -29,15 +29,14 @@
 <rect x="699.5" y="257.3" width="62.0" height="1.2" fill="#8D99A6" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="451.5" y="429.0" width="217.0" height="62.0" fill="#B9824A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="506.1" y="439.9" width="49.6" height="40.3" fill="#4F5862" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="420.5" y="258.5" width="31.0" height="403.0" fill="#C69159" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="668.5" y="258.5" width="31.0" height="403.0" fill="#C69159" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="506.1" y="439.9" width="107.9" height="40.3" fill="#C9CED4" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="564.3" y="439.9" width="49.6" height="40.3" fill="#4F5862" fill-opacity="0.55" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="761.5" y="239.9" width="43.4" height="99.2" fill="#E6E9EC" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="358.5" y="599.5" width="62.0" height="62.0" fill="#B9824A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="358.5" y="258.5" width="62.0" height="62.0" fill="#B9824A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="699.5" y="599.5" width="62.0" height="62.0" fill="#B9824A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="699.5" y="258.5" width="62.0" height="62.0" fill="#B9824A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="761.5" y="239.9" width="43.4" height="99.2" fill="#E6E9EC" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="420.5" y="258.5" width="31.0" height="403.0" fill="#C69159" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="668.5" y="258.5" width="31.0" height="403.0" fill="#C69159" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
+<rect x="506.1" y="439.9" width="107.9" height="40.3" fill="#C9CED4" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="386.4" y="627.4" width="6.2" height="6.2" fill="#4F5862" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="386.4" y="286.4" width="6.2" height="6.2" fill="#4F5862" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="727.4" y="627.4" width="6.2" height="6.2" fill="#4F5862" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
@@ -46,7 +45,6 @@
 <rect x="383.9" y="283.9" width="11.2" height="11.2" fill="#3A424A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="724.9" y="624.9" width="11.2" height="11.2" fill="#3A424A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="724.9" y="283.9" width="11.2" height="11.2" fill="#3A424A" fill-opacity="1" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
-<rect x="386.4" y="429.0" width="347.2" height="62.0" fill="#C69159" fill-opacity="0.55" stroke="#2B2118" stroke-width="0.8" stroke-opacity="0.6"/>
 <rect x="374.0" y="274.0" width="372.0" height="372.0" fill="#7A4E2D" fill-opacity="0.12" stroke="#7A4E2D" stroke-width="2" stroke-dasharray="10 6"/>
 <rect x="389.5" y="289.5" width="341.0" height="341.0" fill="none" stroke="#C9A445" stroke-width="1.5" stroke-dasharray="3 5"/>
 <text x="560.0" y="622.5" fill="#A8862E" font-size="13" text-anchor="middle">контур дна улья 550×550</text>
@@ -95,16 +93,12 @@
 <circle cx="560.0" cy="460.0" r="3" fill="#2B2118"/>
 <circle cx="600.0" cy="350.0" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
 <text x="600.0" y="355.0" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">5</text>
-<line x1="715.0" y1="416.6" x2="835.0" y2="356.6" stroke="#2B2118" stroke-width="1.2"/>
-<circle cx="715.0" cy="416.6" r="3" fill="#2B2118"/>
-<circle cx="835.0" cy="356.6" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="835.0" y="361.6" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">6</text>
 <line x1="389.5" y1="289.5" x2="299.5" y2="229.5" stroke="#2B2118" stroke-width="1.2"/>
 <circle cx="389.5" cy="289.5" r="3" fill="#2B2118"/>
 <circle cx="299.5" cy="229.5" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="299.5" y="234.5" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">8</text>
+<text x="299.5" y="234.5" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">7</text>
 <line x1="783.2" y1="305.0" x2="873.2" y2="265.0" stroke="#2B2118" stroke-width="1.2"/>
 <circle cx="783.2" cy="305.0" r="3" fill="#2B2118"/>
 <circle cx="873.2" cy="265.0" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
-<text x="873.2" y="270.0" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">9</text>
+<text x="873.2" y="270.0" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">8</text>
 </svg>
