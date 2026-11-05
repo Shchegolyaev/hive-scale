@@ -118,6 +118,6 @@
 <circle cx="692.0" cy="628.0" r="3" fill="#2B2118"/>
 <circle cx="842.0" cy="668.0" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
 <text x="842.0" y="673.0" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">7</text>
-<text x="406.4" y="328.0" fill="#6B5D4B" font-size="13" text-anchor="end">наклон к летку 1–2 см:</text>
+<text x="406.4" y="328.0" fill="#6B5D4B" font-size="13" text-anchor="end">наклон к летку 10 мм:</text>
 <text x="406.4" y="345.0" fill="#6B5D4B" font-size="13" text-anchor="end">передние ножки ниже задних</text>
 </svg>
