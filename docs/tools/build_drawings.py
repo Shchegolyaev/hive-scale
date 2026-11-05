@@ -47,7 +47,7 @@ def callout(o, x, y, n, dx, dy):
 
 # ---------------------------------------------------------------- вид спереди
 def front():
-    W, H = 1200, 1340
+    W, H = 1200, 1372
     S = 0.48
     OX, OY = 560, 760           # экранные координаты точки x=0, z=0
     X = lambda x: OX + x * S
@@ -100,6 +100,8 @@ def front():
     callout(o, X(275), Z(M.z_leg + 15), 7, 150, 40)
     o.append(f'<text x="{X(-320):.1f}" y="{Z(900):.1f}" fill="{MUTED}" font-size="13" text-anchor="end">наклон к летку 10 мм:</text>')
     o.append(f'<text x="{X(-320):.1f}" y="{Z(900) + 17:.1f}" fill="{MUTED}" font-size="13" text-anchor="end">передние ножки ниже задних</text>')
+    # легенда позиций (номера — как в таблице BUILD.md)
+    o.append(f'<text x="36" y="{H - 20}" fill="{MUTED}" font-size="14">1 ножка · 2 лежень · 3 поперечина · 4 проставка · 5 датчик · 6 настил · 7 стоп-шпилька · 9 опора</text>')
     o.append("</svg>")
     (IMG / "build-front.svg").write_text("\n".join(o), encoding="utf-8")
 
@@ -126,19 +128,18 @@ def top():
     o.append(f'<text x="{X(0):.1f}" y="{Y(-M.HIVE_Y / 2) - 8:.1f}" fill="#A8862E" font-size="13" text-anchor="middle">контур дна улья 550×550</text>')
     # стрелка «перед / леток»
     o.append(f'<text x="{X(0):.1f}" y="{Y(-560):.1f}" fill="{MUTED}" font-size="14" font-weight="700" text-anchor="middle">▼ перед (леток)</text>')
-    # размеры
+    # размеры — по одному с каждой стороны, без дублей
     dim_v(o, Y(325), Y(-325), X(-500), "650", ext_from=X(-325))
-    dim_v(o, Y(275), Y(-275), X(-420), "550", ext_from=X(-325))
-    o.append(f'<text x="{X(-420) - 8:.1f}" y="{Y(0) + 24:.1f}" fill="{MUTED}" font-size="12" text-anchor="end">оси ножек</text>')
     dim_v(o, Y(300), Y(-300), X(470), "600 настил", ext_from=X(300), side="right")
-    dim_h(o, X(-325), X(325), Y(-325) + 60, "650", ext_from=Y(-325))
-    dim_h(o, X(-275), X(275), Y(-325) + 100, "550 между осями ножек", ext_from=Y(-275))
+    dim_h(o, X(-275), X(275), Y(-325) + 60, "550 между осями ножек", ext_from=Y(-275))
     callout(o, X(-275), Y(-275), 1, -110, 60)
     callout(o, X(200), Y(220), 2, -70, -55)
     callout(o, X(-130), Y(-90), 3, 150, 60)
     callout(o, X(0), Y(0), 5, 40, -110)
     callout(o, X(-275), Y(275), 7, -90, -60)
     callout(o, X(295), Y(75), 8, 60, -90)
+    # легенда позиций (номера — как в таблице BUILD.md)
+    o.append(f'<text x="36" y="{H - 28}" fill="{MUTED}" font-size="14">1 ножка · 2 лежень · 3 поперечина · 5 датчик · 7 стоп-шпилька · 8 корпус электроники</text>')
     o.append("</svg>")
     (IMG / "build-top.svg").write_text("\n".join(o), encoding="utf-8")
 

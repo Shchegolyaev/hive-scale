@@ -53,25 +53,15 @@
 <line x1="358.5" y1="661.5" x2="244.0" y2="661.5" stroke="#6B5D4B" stroke-width="0.8"/>
 <line x1="250.0" y1="258.5" x2="250.0" y2="661.5" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
 <text x="242.0" y="465.0" fill="#2B2118" font-size="14" font-weight="600" text-anchor="end">650</text>
-<line x1="358.5" y1="289.5" x2="293.6" y2="289.5" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="358.5" y1="630.5" x2="293.6" y2="630.5" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="299.6" y1="289.5" x2="299.6" y2="630.5" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="291.6" y="465.0" fill="#2B2118" font-size="14" font-weight="600" text-anchor="end">550</text>
-<text x="291.6" y="484.0" fill="#6B5D4B" font-size="12" text-anchor="end">оси ножек</text>
 <line x1="746.0" y1="274.0" x2="857.4" y2="274.0" stroke="#6B5D4B" stroke-width="0.8"/>
 <line x1="746.0" y1="646.0" x2="857.4" y2="646.0" stroke="#6B5D4B" stroke-width="0.8"/>
 <line x1="851.4" y1="274.0" x2="851.4" y2="646.0" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
 <text x="859.4" y="465.0" fill="#2B2118" font-size="14" font-weight="600" text-anchor="start">600 настил</text>
-<line x1="358.5" y1="661.5" x2="358.5" y2="727.5" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="761.5" y1="661.5" x2="761.5" y2="727.5" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="358.5" y1="721.5" x2="761.5" y2="721.5" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
-<rect x="542.0" y="704.5" width="36.0" height="16" fill="#FFFBF2"/>
-<text x="560.0" y="717.5" fill="#2B2118" font-size="14" font-weight="600" text-anchor="middle">650</text>
-<line x1="389.5" y1="630.5" x2="389.5" y2="767.5" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="730.5" y1="630.5" x2="730.5" y2="767.5" stroke="#6B5D4B" stroke-width="0.8"/>
-<line x1="389.5" y1="761.5" x2="730.5" y2="761.5" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
-<rect x="470.0" y="744.5" width="180.0" height="16" fill="#FFFBF2"/>
-<text x="560.0" y="757.5" fill="#2B2118" font-size="14" font-weight="600" text-anchor="middle">550 между осями ножек</text>
+<line x1="389.5" y1="630.5" x2="389.5" y2="727.5" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="730.5" y1="630.5" x2="730.5" y2="727.5" stroke="#6B5D4B" stroke-width="0.8"/>
+<line x1="389.5" y1="721.5" x2="730.5" y2="721.5" stroke="#2B2118" stroke-width="1.1" marker-start="url(#a)" marker-end="url(#a)"/>
+<rect x="470.0" y="704.5" width="180.0" height="16" fill="#FFFBF2"/>
+<text x="560.0" y="717.5" fill="#2B2118" font-size="14" font-weight="600" text-anchor="middle">550 между осями ножек</text>
 <line x1="389.5" y1="630.5" x2="279.5" y2="690.5" stroke="#2B2118" stroke-width="1.2"/>
 <circle cx="389.5" cy="630.5" r="3" fill="#2B2118"/>
 <circle cx="279.5" cy="690.5" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
@@ -96,4 +86,5 @@
 <circle cx="742.9" cy="413.5" r="3" fill="#2B2118"/>
 <circle cx="802.9" cy="323.5" r="14" fill="#E8A317" stroke="#2B2118" stroke-width="1.2"/>
 <text x="802.9" y="328.5" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">8</text>
+<text x="36" y="872" fill="#6B5D4B" font-size="14">1 ножка · 2 лежень · 3 поперечина · 5 датчик · 7 стоп-шпилька · 8 корпус электроники</text>
 </svg>

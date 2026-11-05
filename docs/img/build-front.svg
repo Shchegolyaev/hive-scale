@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1340" width="1200" height="1340" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1372" width="1200" height="1372" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
 <defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2B2118"/></marker><pattern id="soil" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="14" height="14" fill="#E9E1D0"/><line x1="0" y1="0" x2="0" y2="14" stroke="#CDBFA3" stroke-width="3"/></pattern></defs>
-<rect width="1200" height="1340" rx="20" fill="#FFFBF2"/>
+<rect width="1200" height="1372" rx="20" fill="#FFFBF2"/>
 <text x="36" y="50" fill="#2B2118" font-size="24" font-weight="700">Вид спереди</text>
 <text x="36" y="76" fill="#6B5D4B" font-size="14">размеры в мм · улей Нижегородец из ППУ (дно 550×550, корпус 520×310, магазин 160, крыша 100) · датчик — по паспорту</text>
 <rect x="262.4" y="760.0" width="595.2" height="470.4" fill="url(#soil)"/>
@@ -120,4 +120,5 @@
 <text x="842.0" y="673.0" fill="#2B2118" font-size="14" font-weight="700" text-anchor="middle">7</text>
 <text x="406.4" y="328.0" fill="#6B5D4B" font-size="13" text-anchor="end">наклон к летку 10 мм:</text>
 <text x="406.4" y="345.0" fill="#6B5D4B" font-size="13" text-anchor="end">передние ножки ниже задних</text>
+<text x="36" y="1352" fill="#6B5D4B" font-size="14">1 ножка · 2 лежень · 3 поперечина · 4 проставка · 5 датчик · 6 настил · 7 стоп-шпилька · 9 опора</text>
 </svg>
